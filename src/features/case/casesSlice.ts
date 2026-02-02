@@ -1,25 +1,24 @@
 import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
-import type { Clue } from "../../types/clues";
+import type { Case } from "../../types/clues";
 import type { RootState } from "../../app/store"
 
-const ClueAdapter = createEntityAdapter<Clue, string>({
+const CasesAdapter = createEntityAdapter<Case, string>({
   selectId: (clue) => clue.id,
-  sortComparer: (a, b) => a.title.localeCompare(b.title),
 });
 
 
-const CluesSlice = createSlice({
+const CasesSlice = createSlice({
     name: 'clues',
-    initialState: ClueAdapter.getInitialState(),
+    initialState: CasesAdapter.getInitialState(),
     reducers: {
-        addClue: ClueAdapter.addOne,
-        updateClue: ClueAdapter.updateOne,
-        removeClue: ClueAdapter.removeOne,
+        addCase: CasesAdapter.addOne,
+        updateCase: CasesAdapter.updateOne,
+        removeCase: CasesAdapter.removeOne,
     }
 })
 
-export const {addClue, updateClue, removeClue} = CluesSlice.actions;
+export const {addCase, updateCase, removeCase} = CasesSlice.actions;
 
-export default CluesSlice.reducer;
+export default CasesSlice.reducer;
 
-export const CluesSelector = ClueAdapter.getSelectors((state: RootState) => state.clues);
+export const CasesSelector = CasesAdapter.getSelectors((state: RootState) => state.cases);

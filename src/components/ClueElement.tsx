@@ -1,9 +1,11 @@
+// import 
+
+export default function ClueElement(data: Object){
 
 
-export default function ClueElement(){
     return (
         <>
-
+            <h1>This is a clue</h1>
         </>
     )
 }

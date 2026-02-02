@@ -1,9 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
-import ClueReducer from "../features/clue/cluesSlice"
+import CluesReducer from "../features/clue/cluesSlice"
+import ConnectionsReducer from "../features/connection/connectionSlice"
+import CasesReducer  from "../features/case/casesSlice";
 
 export const store = configureStore({
     reducer: {
-        clues: ClueReducer
+        clues: CluesReducer,
+        connections: ConnectionsReducer,
+        cases: CasesReducer
     },
 })
 
