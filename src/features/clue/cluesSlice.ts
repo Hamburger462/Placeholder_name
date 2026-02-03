@@ -1,7 +1,8 @@
 import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
+
 import type { Clue } from "../../types/clues";
 import type { RootState } from "../../app/store"
-import { data } from "react-router-dom";
 
 const ClueAdapter = createEntityAdapter<Clue, string>({
   selectId: (clue) => clue.id,
@@ -13,7 +14,7 @@ const CluesSlice = createSlice({
     name: 'clues',
     initialState: ClueAdapter.getInitialState(),
     reducers: {
-        addClue(state, action) {ClueAdapter.addOne(state, action.payload)},
+        addClue: ClueAdapter.addOne,
         updateClue: ClueAdapter.updateOne,
         removeClue: ClueAdapter.removeOne,
     }
