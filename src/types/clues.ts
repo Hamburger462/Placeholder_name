@@ -33,5 +33,6 @@ export type Clue = {
 
 export type Case = {
     id: string;
+    title: string;
     clueIds: Array<number>;
 };

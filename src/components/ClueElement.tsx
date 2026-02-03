@@ -1,11 +1,11 @@
-// import 
+import type { Clue } from "../types/clues"
 
-export default function ClueElement(data: Object){
+export default function ClueElement(data: Clue){
 
 
     return (
         <>
-            <h1>This is a clue</h1>
+            <h1>{data.title}</h1>
         </>
     )
 }
