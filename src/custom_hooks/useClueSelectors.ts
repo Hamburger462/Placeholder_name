@@ -1,15 +1,68 @@
 import { useAppDispatch, useAppSelector } from "../app/hooks";
+import type { RootState } from "../app/store";
+
 import { addClue, updateClue, removeClue, CluesSelector } from "../features/clue/cluesSlice";
+
 import type { Clue } from "../types/clues";
+
 import type { Update } from "@reduxjs/toolkit";
-
-export default function useClueSelectors(caseId: string){
-    const dispatch = useAppDispatch();
-    const cluesByCaseId = useAppSelector(CluesSelector.selectAll).filter((clue) => clue.caseId === caseId);
-    const pinClue = (data: Clue) => dispatch(addClue(data));
-    const unpinClue = (id: string) => dispatch(removeClue(id));
-    const renewClue = (update: Update<Clue, string>) => dispatch(updateClue(update));
+import { createSelector } from "@reduxjs/toolkit";
 
 
-    return {cluesByCaseId, pinClue, unpinClue, renewClue};
+export const selectCluesByCaseId = createSelector(
+  [
+    CluesSelector.selectAll,
+    (_: RootState, caseId: string) => caseId
+  ],
+  (clues, caseId) =>
+    clues.filter((clue) => clue.caseId === caseId)
+);
+
+
+export function useCluesForCase(caseId: string) {
+  const dispatch = useAppDispatch();
+
+  const cluesByCaseId = useAppSelector((state) =>
+    selectCluesByCaseId(state, caseId)
+  );
+
+  const pinClue = (data: Clue) =>
+    dispatch(addClue(data));
+
+  const unpinClue = (id: string) =>
+    dispatch(removeClue(id));
+
+  const renewClue = (update: Update<Clue, string>) =>
+    dispatch(updateClue(update));
+
+  return {
+    cluesByCaseId,
+    pinClue,
+    unpinClue,
+    renewClue
+  };
+}
+
+export function useCluesForClue(clueId: string) {
+  const dispatch = useAppDispatch();
+
+  const clue = useAppSelector((state) =>
+    CluesSelector.selectById(state, clueId)
+  );
+
+  const changePos = (x: number, y: number) => {
+    dispatch(
+      updateClue({
+        id: clueId,
+        changes: {
+          position: { x, y }
+        }
+      })
+    );
+  };
+
+  return {
+    clue,
+    changePos
+  };
 }

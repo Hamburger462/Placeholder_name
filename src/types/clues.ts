@@ -24,7 +24,7 @@ export type Clue = {
     id: string;
     caseId: string;
     title: string;
-    mediaIds: Array<string>;
+    mediaIds ?: Array<string>;
     position: {
         x: number;
         y: number;
@@ -34,5 +34,5 @@ export type Clue = {
 export type Case = {
     id: string;
     title: string;
-    clueIds: Array<number>;
+    clueIds ?: Array<number>;
 };

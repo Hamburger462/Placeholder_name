@@ -8,7 +8,7 @@ const CasesAdapter = createEntityAdapter<Case, string>({
 
 
 const CasesSlice = createSlice({
-    name: 'clues',
+    name: 'cases',
     initialState: CasesAdapter.getInitialState(),
     reducers: {
         addCase: CasesAdapter.addOne,
