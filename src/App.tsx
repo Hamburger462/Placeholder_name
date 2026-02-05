@@ -1,4 +1,4 @@
-import Caseboard from "./pages/CaseBoard";
+import Caseboard from "./components/CaseBoard";
 import { useState } from "react";
 import type { Case } from "./types/clues";
 import { useCases } from "./custom_hooks/useCasesSelectors";

@@ -1,0 +1,10 @@
+.CaseBoard{
+    border: 2px solid;
+}
+
+.ClueContainer{
+    position: relative;
+    border: 2px solid;
+    width: 1000px;
+    height: 1000px;
+}
