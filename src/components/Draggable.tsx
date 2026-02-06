@@ -1,92 +1,163 @@
-import { useState, useRef, useEffect } from "react";
-// import { useContext } from "react";
-// import { DragContext } from "../context/dragContext";
+import { useState, useRef, useEffect, useContext } from "react";
+import { DragContext, type Droppable } from "../context/dragContext";
 
-type DraggableProps = {
-  children: React.ReactNode;
-  initialX: number;
-  initialY: number;
-  onDragEnd?: (x: number, y: number) => void;
-  parentRef: React.RefObject<HTMLDivElement | null>;
+export type DraggableProps = {
+    children?: React.ReactNode;
+    initialX: number;
+    initialY: number;
+    onDragEnd?: (x: number, y: number) => void;
+    parentRef: React.RefObject<HTMLDivElement | null>;
+    className?: string,
 };
 
 export default function Draggable({
-  children,
-  initialX,
-  initialY,
-  onDragEnd,
-  parentRef
+    children,
+    initialX,
+    initialY,
+    onDragEnd,
+    parentRef,
+    className
 }: DraggableProps) {
-  const [isDragging, setDragging] = useState(false);
-  const [pos, setPos] = useState({ x: initialX, y: initialY });
+    const context = useContext(DragContext);
 
-  const offset = useRef({ x: 0, y: 0 });
+    const [isDragging, setDragging] = useState(false);
+    const [pos, setPos] = useState({ x: initialX, y: initialY });
 
-  const dragRef = useRef<HTMLDivElement>(null);
+    const offset = useRef({ x: 0, y: 0 });
 
+    const dragRef = useRef<HTMLDivElement>(null);
 
-  const onMouseDown = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setDragging(true);
+    const dropRef = useRef<Droppable | undefined>(null);
 
-    offset.current = {
-      x: e.clientX - pos.x,
-      y: e.clientY - pos.y,
-    };
-  };
+    useEffect(() => {
+        dropRef.current = context?.droppables;
+        // checkCollision();
+    }, []);
 
-  const onMouseMove = (e: MouseEvent) => {
-  if (!isDragging || !parentRef.current || !dragRef.current) return;
+    const currentDrop = useRef<string | null>(null);
 
-  const parentRect = parentRef.current.getBoundingClientRect();
-  const dragRect = dragRef.current.getBoundingClientRect();
+    function checkCollision(mode: "enter" | "drop") {
+        if (!dropRef.current || !dragRef.current) return;
 
-  let newX = e.clientX - offset.current.x;
-  let newY = e.clientY - offset.current.y;
+        const dragRect = dragRef.current?.getBoundingClientRect();
+        let newOverId: string | null = null;
 
+        dropRef.current.forEach((elem, key) => {
+            if (elem) {
+                if (!elem?.ref.current) return;
 
-  // Clamp horizontally
-  newX = Math.max(0, Math.min(newX, parentRect.width - dragRect.width));
+                const dropRect = elem.ref.current!.getBoundingClientRect();
 
-  // Clamp vertically
-  newY = Math.max(0, Math.min(newY, parentRect.height - dragRect.height));
+                const isOverlapping =
+                    dropRect.left < dragRect.right &&
+                    dropRect.right > dragRect.left &&
+                    dropRect.top < dragRect.bottom &&
+                    dropRect.bottom > dragRect.top;
 
-  setPos({ x: newX, y: newY });
-};
+                if (isOverlapping) {
+                    newOverId = key;
 
+                    if (mode === "enter" && currentDrop.current !== key) {
+                        // Call onEnter for the new droppable
+                        elem.onEnter?.();
+                    }
 
-  const onMouseUp = () => {
-    if (!isDragging) return;
+                    if (mode === "drop") {
+                        // Call onDrop when drag ends
+                        elem.onDrop?.(dragRef.current!);
+                    }
+                }
+            }
+        });
 
-    setDragging(false);
-    onDragEnd?.(pos.x, pos.y); // use committed position
-  };
+        if (
+            mode === "enter" &&
+            currentDrop.current &&
+            currentDrop.current !== newOverId
+        ) {
+            const prev = dropRef.current.get(currentDrop.current);
+            prev?.onLeave?.();
+        }
 
-  useEffect(() => {
-    if (isDragging) {
-      window.addEventListener("mousemove", onMouseMove);
-      window.addEventListener("mouseup", onMouseUp);
+        // Update the currently hovered droppable
+        if (mode === "enter") currentDrop.current = newOverId;
     }
 
-    return () => {
-      window.removeEventListener("mousemove", onMouseMove);
-      window.removeEventListener("mouseup", onMouseUp);
-    };
-  }, [isDragging]);
+    const onMouseDown = (e: React.MouseEvent) => {
+        e.preventDefault();
 
-  return (
-    <div
-        ref={dragRef}
-      style={{
-        position: "absolute",
-        left: pos.x,
-        top: pos.y,
-        cursor: isDragging ? "grabbing" : "grab",
-        userSelect: "none",
-      }}
-      onMouseDown={onMouseDown}
-    >
-      {children}
-    </div>
-  );
+        document.body.style.cursor = "grab";
+
+        setDragging(true);
+
+        context?.setActiveDrag({ id: crypto.randomUUID(), ref: dragRef });
+
+        offset.current = {
+            x: e.clientX - pos.x,
+            y: e.clientY - pos.y,
+        };
+
+        checkCollision("enter");
+    };
+
+    const onMouseMove = (e: MouseEvent) => {
+        if (!isDragging || !parentRef.current || !dragRef.current) return;
+
+        document.body.style.cursor = "grabbing";
+
+        const parentRect = parentRef.current.getBoundingClientRect();
+        const dragRect = dragRef.current.getBoundingClientRect();
+
+        let newX = e.clientX - offset.current.x;
+        let newY = e.clientY - offset.current.y;
+
+        // Clamp horizontally
+        newX = Math.max(0, Math.min(newX, parentRect.width - dragRect.width));
+
+        // Clamp vertically
+        newY = Math.max(0, Math.min(newY, parentRect.height - dragRect.height));
+
+        setPos({ x: newX, y: newY });
+
+        checkCollision("enter");
+    };
+
+    const onMouseUp = () => {
+        if (!isDragging) return;
+
+        document.body.style.cursor = "default";
+
+        setDragging(false);
+        onDragEnd?.(pos.x, pos.y); // use committed position
+
+        checkCollision("drop")
+    };
+
+    useEffect(() => {
+        if (isDragging) {
+            window.addEventListener("mousemove", onMouseMove);
+            window.addEventListener("mouseup", onMouseUp);
+        }
+
+        return () => {
+            window.removeEventListener("mousemove", onMouseMove);
+            window.removeEventListener("mouseup", onMouseUp);
+        };
+    }, [isDragging]);
+
+    return (
+        <div
+            ref={dragRef}
+            style={{
+                position: "absolute",
+                left: pos.x,
+                top: pos.y,
+                userSelect: "none",
+            }}
+            onMouseDown={onMouseDown}
+            className={className}
+        >
+            {children}
+        </div>
+    );
 }

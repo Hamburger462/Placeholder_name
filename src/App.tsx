@@ -31,6 +31,7 @@ function App() {
                 </label>
             </form>
             <button onClick={addCase}>Add case</button>
+
             <div className="CaseContainer">
                 {allCases.map((element) => (
                     <Caseboard data={element} key={element.id}></Caseboard>
