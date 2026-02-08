@@ -23,7 +23,7 @@ export type Connection = {
 export type Clue = {
     id: string;
     caseId: string;
-    title: string;
+    title?: string;
     mediaIds ?: Array<string>;
     position: {
         x: number;

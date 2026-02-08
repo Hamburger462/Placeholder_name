@@ -6,12 +6,6 @@ import type { DragState, Droppable, ActiveElem } from "./dragContext";
 export function DragProvider({ children }: { children: React.ReactNode }) {
     const [droppables, setDroppables] = useState<Droppable>(new Map());
     const [activeDrag, setActiveDrag] = useState<ActiveElem>(null);
-    const activeDrop = useRef<ActiveElem>(null);
-
-    const setActiveDrop = (drop: {id: string, ref: RefObject<HTMLElement | null>}) => {
-        const newDrop: ActiveElem = drop;
-        activeDrop.current = newDrop;
-    };
 
     const registerDroppable = (
         id: string,
@@ -38,9 +32,6 @@ export function DragProvider({ children }: { children: React.ReactNode }) {
         droppables,
         registerDroppable,
         unregisterDroppable,
-
-        activeDrop: activeDrop.current,
-        setActiveDrop,
     };
 
     return (

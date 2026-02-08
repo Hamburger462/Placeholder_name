@@ -21,7 +21,7 @@ export type DragState = {
     setActiveDrag: (drag: {
         id: string;
         ref: RefObject<HTMLElement | null>;
-    }) => void;
+    } | null) => void;
 
     droppables: Droppable;
     registerDroppable: (
@@ -33,11 +33,11 @@ export type DragState = {
     ) => void;
     unregisterDroppable: (id: string) => void;
 
-    activeDrop: ActiveElem;
-    setActiveDrop: (drop: {
-        id: string;
-        ref: RefObject<HTMLElement | null>;
-    }) => void;
+    // activeDrop: ActiveElem;
+    // setActiveDrop: (drop: {
+    //     id: string;
+    //     ref: RefObject<HTMLElement | null>;
+    // } | null) => void;
 };
 
 export const DragContext = createContext<DragState | null>(null);

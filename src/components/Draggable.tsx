@@ -5,9 +5,19 @@ export type DraggableProps = {
     children?: React.ReactNode;
     initialX: number;
     initialY: number;
-    onDragEnd?: (x: number, y: number) => void;
+    onDragEnd?: (
+        dragPos: {
+            x: number;
+            y: number;
+            setPos: React.Dispatch<
+                React.SetStateAction<{ x: number; y: number }>
+            >;
+        },
+        payloadAction?: any,
+    ) => void;
     parentRef: React.RefObject<HTMLDivElement | null>;
-    className?: string,
+    className?: string;
+    payload?: {};
 };
 
 export default function Draggable({
@@ -16,12 +26,14 @@ export default function Draggable({
     initialY,
     onDragEnd,
     parentRef,
-    className
+    className,
+    payload,
 }: DraggableProps) {
     const context = useContext(DragContext);
 
     const [isDragging, setDragging] = useState(false);
     const [pos, setPos] = useState({ x: initialX, y: initialY });
+    const livePos = useRef({ x: 0, y: 0 });
 
     const offset = useRef({ x: 0, y: 0 });
 
@@ -31,62 +43,47 @@ export default function Draggable({
 
     useEffect(() => {
         dropRef.current = context?.droppables;
-        // checkCollision();
-    }, []);
+    }, [context?.droppables]);
 
     const currentDrop = useRef<string | null>(null);
 
-    function checkCollision(mode: "enter" | "drop") {
+    function checkCollision(payload?: any) {
         if (!dropRef.current || !dragRef.current) return;
 
-        const dragRect = dragRef.current?.getBoundingClientRect();
+        const dragRect = dragRef.current.getBoundingClientRect(); // 👈 use this
         let newOverId: string | null = null;
 
         dropRef.current.forEach((elem, key) => {
-            if (elem) {
-                if (!elem?.ref.current) return;
+            if (!elem?.ref.current) return;
+            const dropRect = elem.ref.current.getBoundingClientRect();
 
-                const dropRect = elem.ref.current!.getBoundingClientRect();
+            const isOverlapping =
+                dropRect.left < dragRect.right &&
+                dropRect.right > dragRect.left &&
+                dropRect.top < dragRect.bottom &&
+                dropRect.bottom > dragRect.top;
 
-                const isOverlapping =
-                    dropRect.left < dragRect.right &&
-                    dropRect.right > dragRect.left &&
-                    dropRect.top < dragRect.bottom &&
-                    dropRect.bottom > dragRect.top;
+            if (isOverlapping && newOverId === null) {
+                newOverId = key;
 
-                if (isOverlapping) {
-                    newOverId = key;
-
-                    if (mode === "enter" && currentDrop.current !== key) {
-                        // Call onEnter for the new droppable
-                        elem.onEnter?.();
-                    }
-
-                    if (mode === "drop") {
-                        // Call onDrop when drag ends
-                        elem.onDrop?.(dragRef.current!);
-                    }
+                if (currentDrop.current !== key) {
+                    elem.onEnter?.(payload);
                 }
             }
         });
 
-        if (
-            mode === "enter" &&
-            currentDrop.current &&
-            currentDrop.current !== newOverId
-        ) {
+        if (currentDrop.current && currentDrop.current !== newOverId) {
             const prev = dropRef.current.get(currentDrop.current);
             prev?.onLeave?.();
         }
 
-        // Update the currently hovered droppable
-        if (mode === "enter") currentDrop.current = newOverId;
+        currentDrop.current = newOverId;
     }
 
     const onMouseDown = (e: React.MouseEvent) => {
         e.preventDefault();
 
-        document.body.style.cursor = "grab";
+        document.body.style.cursor = "grabbing";
 
         setDragging(true);
 
@@ -96,14 +93,10 @@ export default function Draggable({
             x: e.clientX - pos.x,
             y: e.clientY - pos.y,
         };
-
-        checkCollision("enter");
     };
 
     const onMouseMove = (e: MouseEvent) => {
         if (!isDragging || !parentRef.current || !dragRef.current) return;
-
-        document.body.style.cursor = "grabbing";
 
         const parentRect = parentRef.current.getBoundingClientRect();
         const dragRect = dragRef.current.getBoundingClientRect();
@@ -118,8 +111,9 @@ export default function Draggable({
         newY = Math.max(0, Math.min(newY, parentRect.height - dragRect.height));
 
         setPos({ x: newX, y: newY });
+        livePos.current = { x: newX, y: newY };
 
-        checkCollision("enter");
+        checkCollision();
     };
 
     const onMouseUp = () => {
@@ -128,9 +122,17 @@ export default function Draggable({
         document.body.style.cursor = "default";
 
         setDragging(false);
-        onDragEnd?.(pos.x, pos.y); // use committed position
 
-        checkCollision("drop")
+        onDragEnd?.(
+            {
+                x: livePos.current.x,
+                y: livePos.current.y,
+                setPos: setPos,
+            },
+            currentDrop.current,
+        ); // use committed position
+
+        checkCollision();
     };
 
     useEffect(() => {
@@ -153,6 +155,7 @@ export default function Draggable({
                 left: pos.x,
                 top: pos.y,
                 userSelect: "none",
+                cursor: isDragging ? "grabbing" : "grab",
             }}
             onMouseDown={onMouseDown}
             className={className}

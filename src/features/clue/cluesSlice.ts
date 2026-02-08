@@ -1,12 +1,11 @@
 import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
 
 import type { Clue } from "../../types/clues";
 import type { RootState } from "../../app/store"
 
 const ClueAdapter = createEntityAdapter<Clue, string>({
   selectId: (clue) => clue.id,
-  sortComparer: (a, b) => a.title.localeCompare(b.title),
+//   sortComparer: (a, b) => a.title.localeCompare(b.title),
 });
 
 
