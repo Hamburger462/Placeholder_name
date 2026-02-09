@@ -9,7 +9,7 @@ interface DeleteZoneProps{
 
 export default function DeleteZone({id} : DeleteZoneProps){
     return (
-    <Droppable id={id} className="ClueDrop" >
+    <Droppable id={id} className="ClueDrop DeleteZoneDrop" >
         <div>Delete Clue</div>
     </Droppable>
     )

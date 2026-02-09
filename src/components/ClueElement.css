@@ -1,4 +1,10 @@
 .ClueElement{
     border: 2px solid;
     padding: 10px;
+    min-width: 200px;
+}
+
+.ConnectionElement{
+    background-color: red;
+    padding: 10px;
 }

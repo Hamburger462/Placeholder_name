@@ -1,18 +1,22 @@
 import { useState, useRef, useEffect, useContext } from "react";
 import { DragContext, type Droppable } from "../context/dragContext";
 
+export type onDragEndPos = {
+                x: number;
+            y: number;
+            height: number;
+            width: number;
+            setPos: React.Dispatch<
+                React.SetStateAction<{ x: number; y: number }>
+            >;
+        }
+
 export type DraggableProps = {
     children?: React.ReactNode;
     initialX: number;
     initialY: number;
     onDragEnd?: (
-        dragPos: {
-            x: number;
-            y: number;
-            setPos: React.Dispatch<
-                React.SetStateAction<{ x: number; y: number }>
-            >;
-        },
+        dragPos: onDragEndPos,
         payloadAction?: any,
     ) => void;
     parentRef: React.RefObject<HTMLDivElement | null>;
@@ -50,7 +54,7 @@ export default function Draggable({
     function checkCollision(payload?: any) {
         if (!dropRef.current || !dragRef.current) return;
 
-        const dragRect = dragRef.current.getBoundingClientRect(); // 👈 use this
+        const dragRect = dragRef.current.getBoundingClientRect();
         let newOverId: string | null = null;
 
         dropRef.current.forEach((elem, key) => {
@@ -123,10 +127,14 @@ export default function Draggable({
 
         setDragging(false);
 
+        const DragRect = dragRef.current!.getBoundingClientRect();
+
         onDragEnd?.(
             {
                 x: livePos.current.x,
                 y: livePos.current.y,
+                height: DragRect.height,
+                width: DragRect.width,
                 setPos: setPos,
             },
             currentDrop.current,

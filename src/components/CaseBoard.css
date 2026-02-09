@@ -11,9 +11,14 @@
 }
 
 .ClueDrop{
-    width: 20%;
-    height: 45%;
-    position: relative;
+    width: 200px;
+    height: 100px;
+    position: absolute;
+}
+
+.AddZoneDrop{
+    /* top: 50%; */
+    left: 0;
 }
 
 .AddZoneClue{
@@ -21,4 +26,8 @@
     height: 100%;
     text-align: center;
     border: 2px solid;
+}
+
+.DeleteZoneDrop{
+    right: 0;
 }

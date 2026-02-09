@@ -5,6 +5,8 @@ import { type Clue } from "../../types/clues";
 
 import { useCluesForCase } from "../../custom_hooks/useClueSelectors";
 
+import { type onDragEndPos } from "../Draggable";
+
 import "../CaseBoard.css";
 
 interface AddZoneProps {
@@ -17,13 +19,7 @@ export default function AddZone({ id, parentRef, caseId }: AddZoneProps) {
     const { pinClue } = useCluesForCase(caseId);
 
     const handleDragEnd = (
-        dragPos: {
-            x: number;
-            y: number;
-            setPos: React.Dispatch<
-                React.SetStateAction<{ x: number; y: number }>
-            >;
-        },
+        dragPos: onDragEndPos,
         droppedId?: string | null,
     ) => {
         // If dropped over ANY droppable → reset
@@ -44,7 +40,7 @@ export default function AddZone({ id, parentRef, caseId }: AddZoneProps) {
     };
 
     return (
-        <Droppable id={id} className="ClueDrop">
+        <Droppable id={id} className="ClueDrop AddZoneDrop">
             <Draggable
                 initialX={0}
                 initialY={0}
