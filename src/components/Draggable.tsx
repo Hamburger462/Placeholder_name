@@ -97,6 +97,8 @@ export default function Draggable({
             x: e.clientX - pos.x,
             y: e.clientY - pos.y,
         };
+
+        checkCollision();
     };
 
     const onMouseMove = (e: MouseEvent) => {

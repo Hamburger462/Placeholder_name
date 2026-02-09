@@ -6,12 +6,14 @@ export type DroppableProps = {
   onEnter?: (...args: any[]) => void;
   onLeave?: (...args: any[]) => void;
   onDrop?: (...args: any[]) => void;
+  onMouseDown?: (...args: any[]) => void;
+  onMouseUp?: (...args: any[]) => void;
   children?: React.ReactNode;
   className?: string;
   ref?: RefObject<HTMLDivElement | null>;
 };
 
-export default function Droppable({ id, ref = useRef<HTMLDivElement | null>(null), onEnter, onLeave, onDrop, children, className}: DroppableProps) {
+export default function Droppable({ id, ref = useRef<HTMLDivElement | null>(null), children, className, onEnter, onLeave, onDrop, onMouseDown, onMouseUp}: DroppableProps) {
   const context = useContext(DragContext);
   useEffect(() => {
     if(ref.current){
@@ -29,6 +31,8 @@ export default function Droppable({ id, ref = useRef<HTMLDivElement | null>(null
       style={{
         border: "2px dashed gray",
       }}
+      onMouseDown={onMouseDown}
+      onMouseUp={onMouseUp}
     >
       {children}
     </div>

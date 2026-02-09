@@ -15,9 +15,9 @@ export type MediaItem =
 
 export type Connection = {
     id: string;
-    caseId: string;
-    startId: number;
-    endId: number;
+    caseId: string | undefined;
+    startId: string | undefined | null;
+    endId: string | undefined | null;
 };
 
 export type Clue = {

@@ -16,12 +16,21 @@ export type ActiveElem = {
     ref: RefObject<HTMLElement | null>;
 } | null;
 
-export type DragState = {
+export type ConnectionState = {
+    isActive?: boolean;
+    startId?: string | null;
+    startPoint?: { x: number; y: number } | null;
+    mouse?: { x: number; y: number };
+};
+
+export interface DragState {
     activeDrag: ActiveElem;
-    setActiveDrag: (drag: {
-        id: string;
-        ref: RefObject<HTMLElement | null>;
-    } | null) => void;
+    setActiveDrag: (
+        drag: {
+            id: string;
+            ref: RefObject<HTMLElement | null>;
+        } | null,
+    ) => void;
 
     droppables: Droppable;
     registerDroppable: (
@@ -32,6 +41,11 @@ export type DragState = {
         onDrop?: (...args: any[]) => void | null,
     ) => void;
     unregisterDroppable: (id: string) => void;
+
+    ConnectionState: ConnectionState | null;
+    startConnection: (id: string, point: { x: number; y: number }) => any;
+    updateMouse: (point: { x: number; y: number }) => any;
+    endConnection: (targetId?: string, caseId?: string) => any;
 
     // activeDrop: ActiveElem;
     // setActiveDrop: (drop: {
