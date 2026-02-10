@@ -3,6 +3,23 @@ import { addConnection, removeConnection, updateConnection, ConnectionSelector }
 import type { Connection } from "../types/clues";
 import type { Update } from "@reduxjs/toolkit";
 
+import { createSelector } from "@reduxjs/toolkit";
+
+import { type RootState } from "../app/store";
+
+import { useMemo } from "react";
+
+export const makeSelectConnectionsByCaseId = () =>
+  createSelector(
+    [
+      ConnectionSelector.selectAll,
+      (_: RootState, caseId: string) => caseId
+    ],
+    (connections, caseId) =>
+      connections.filter(c => c.caseId === caseId)
+  );
+
+
 export function useConnections(){
     const dispatch = useAppDispatch();
     const allConnections = useAppSelector(state => ConnectionSelector.selectAll(state));
@@ -16,7 +33,14 @@ export function useConnections(){
 
 export function useConnectionsForCase(caseId: string){
     const dispatch = useAppDispatch();
-    const connectionsByCaseId = useAppSelector(state => ConnectionSelector.selectAll(state).filter((value) => value.caseId == caseId));
+      const selectConnections = useMemo(
+    makeSelectConnectionsByCaseId,
+    []
+  );
 
-    return {connectionsByCaseId}
+  const connectionsByCaseId = useAppSelector(state =>
+    selectConnections(state, caseId)
+  );
+    
+    return {connectionsByCaseId};
 }

@@ -8,23 +8,33 @@ import type { Clue } from "../types/clues";
 import type { Update } from "@reduxjs/toolkit";
 import { createSelector } from "@reduxjs/toolkit";
 
+import { useMemo } from "react";
 
-export const selectCluesByCaseId = createSelector(
-  [
-    CluesSelector.selectAll,
-    (_: RootState, caseId: string) => caseId
-  ],
-  (clues, caseId) =>
-    clues.filter((clue) => clue.caseId === caseId)
-);
+
+export const makeSelectCluesByCaseId = () =>
+  createSelector(
+    [
+      CluesSelector.selectAll,
+      (_: RootState, caseId: string) => caseId
+    ],
+    (clues, caseId) =>
+      clues.filter((clue) => clue.caseId === caseId)
+  );
 
 
 export function useCluesForCase(caseId: string) {
   const dispatch = useAppDispatch();
 
-  const cluesByCaseId = useAppSelector((state) =>
+  const selectCluesByCaseId = useMemo(
+    makeSelectCluesByCaseId,
+    []
+  );
+
+  const cluesByCaseId = useAppSelector(state =>
     selectCluesByCaseId(state, caseId)
   );
+
+  const clueByClueIdInCase = (clueId?: string) => cluesByCaseId.find((value) => value.id == clueId);
 
   const pinClue = (data: Clue) =>
     dispatch(addClue(data));
@@ -37,6 +47,7 @@ export function useCluesForCase(caseId: string) {
 
   return {
     cluesByCaseId,
+    clueByClueIdInCase,
     pinClue,
     unpinClue,
     renewClue

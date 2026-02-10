@@ -15,23 +15,26 @@ export type DraggableProps = {
     children?: React.ReactNode;
     initialX: number;
     initialY: number;
-    onDragEnd?: (
-        dragPos: onDragEndPos,
-        payloadAction?: any,
-    ) => void;
+
     parentRef: React.RefObject<HTMLDivElement | null>;
     className?: string;
     payload?: {};
+
+    onDragEnd?: (
+        dragPos: onDragEndPos,
+        payloadAction?: any,
+    ) => any;
+    onDragging?: (dragPos: onDragEndPos, payloadAction?: any) => any;
 };
 
 export default function Draggable({
     children,
     initialX,
     initialY,
-    onDragEnd,
     parentRef,
     className,
-    payload,
+    onDragEnd,
+    onDragging,
 }: DraggableProps) {
     const context = useContext(DragContext);
 
@@ -42,6 +45,8 @@ export default function Draggable({
     const offset = useRef({ x: 0, y: 0 });
 
     const dragRef = useRef<HTMLDivElement>(null);
+
+    let dragRect = dragRef.current?.getBoundingClientRect();
 
     const dropRef = useRef<Droppable | undefined>(null);
 
@@ -87,6 +92,8 @@ export default function Draggable({
     const onMouseDown = (e: React.MouseEvent) => {
         e.preventDefault();
 
+        dragRect = dragRef.current!.getBoundingClientRect();
+
         document.body.style.cursor = "grabbing";
 
         setDragging(true);
@@ -120,6 +127,14 @@ export default function Draggable({
         livePos.current = { x: newX, y: newY };
 
         checkCollision();
+
+        onDragging?.({
+                x: livePos.current.x,
+                y: livePos.current.y,
+                height: dragRect.height,
+                width: dragRect.width,
+                setPos: setPos,
+            },);
     };
 
     const onMouseUp = () => {
@@ -129,14 +144,12 @@ export default function Draggable({
 
         setDragging(false);
 
-        const DragRect = dragRef.current!.getBoundingClientRect();
-
         onDragEnd?.(
             {
                 x: livePos.current.x,
                 y: livePos.current.y,
-                height: DragRect.height,
-                width: DragRect.width,
+                height: dragRect!.height,
+                width: dragRect!.width,
                 setPos: setPos,
             },
             currentDrop.current,

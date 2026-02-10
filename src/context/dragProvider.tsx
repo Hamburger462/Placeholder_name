@@ -20,6 +20,8 @@ export function DragProvider({ children }: { children: React.ReactNode }) {
     const {allConnections, pinConnection, unpinConnection, renewConnection} = useConnections()
 
     const startConnection = (id: string, point: { x: number; y: number }) => {
+        console.log("Connection started")
+
         const newConnection: ConnectionState = {
             ...ConnectionState.current,
             isActive: true,
@@ -40,12 +42,16 @@ export function DragProvider({ children }: { children: React.ReactNode }) {
     };
 
     const endConnection = (targetId?: string, caseId?: string) => {
+        console.log("Connection ended")
+
         const newConnection: Connection = {
             id: crypto.randomUUID(),
             caseId: caseId,
             startId: ConnectionState.current?.startId,
             endId: targetId
         }
+
+        ConnectionState.current = null;
 
         pinConnection(newConnection);
     };

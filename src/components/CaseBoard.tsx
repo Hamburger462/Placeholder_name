@@ -13,6 +13,7 @@ import type { DraggableProps } from "./Draggable";
 
 import AddZone from "./Dropzones/AddZone";
 import DeleteZone from "./Dropzones/DeleteZone";
+import ConnectionLayer from "./ConnectionLayer";
 
 type CaseBoardProps = {
     data: Case;
@@ -31,6 +32,7 @@ export default function Caseboard({ data }: CaseBoardProps) {
 
                 <DragProvider>
                     <div className="ClueContainer" ref={containerRef}>
+                        <ConnectionLayer caseId={data.id}></ConnectionLayer>
                         <AddZone
                             parentRef={containerRef}
                             caseId={data.id}
