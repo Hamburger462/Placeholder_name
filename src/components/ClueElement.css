@@ -1,7 +1,7 @@
 .ClueElement{
     border: 2px solid;
-    padding: 10px;
     min-width: 200px;
+    padding: 10px;
     background-color: green;
 }
 
@@ -12,6 +12,15 @@
 
 .ConnectionDrop{
     transition: 0.1s;
+    position: relative;
+    top: -30px;
+    width: 20%;
+    margin: auto;
+    border-radius: 100%;
+    border: none;
+    aspect-ratio: 1 / 1;
+    background-color: red;
+    border: 2px solid;
 }
 
 .ConnectionDrop:hover{

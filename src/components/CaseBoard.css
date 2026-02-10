@@ -1,8 +1,8 @@
-.CaseBoard{
+.CaseBoard {
     border: 2px solid;
 }
 
-.ClueContainer{
+.ClueContainer {
     position: relative;
     border: 2px solid;
     height: 1000px;
@@ -10,31 +10,33 @@
     justify-content: space-between;
 }
 
-.ClueDrop{
+.ClueDrop {
     width: 200px;
     height: 100px;
     position: absolute;
+    border: 2px dotted;
 }
 
-.AddZoneDrop{
+.AddZoneDrop {
     /* top: 50%; */
     left: 0;
 }
 
-.AddZoneClue{
+.AddZoneClue {
     width: 100%;
     height: 100%;
     text-align: center;
     border: 2px solid;
 }
 
-.DeleteZoneDrop{
+.DeleteZoneDrop {
     right: 0;
 }
 
-svg{
+svg {
     position: absolute;
     width: 100%;
     height: 100%;
-    /* z-index: 1; */
+    z-index: 1;
+    pointer-events: none;
 }

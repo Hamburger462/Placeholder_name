@@ -28,9 +28,6 @@ export default function Droppable({ id, ref = useRef<HTMLDivElement | null>(null
     <div
       className={className}
       ref={ref}
-      style={{
-        border: "2px dashed gray",
-      }}
       onMouseDown={onMouseDown}
       onMouseUp={onMouseUp}
     >

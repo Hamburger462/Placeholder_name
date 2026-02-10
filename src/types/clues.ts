@@ -18,6 +18,9 @@ export type Connection = {
     caseId: string | undefined;
     startId: string | undefined | null;
     endId: string | undefined | null;
+    pos1?: {x: number, y: number};
+    pos2?: {x: number, y: number};
+    cursorPos?: {x: number, y: number};
 };
 
 export type Clue = {

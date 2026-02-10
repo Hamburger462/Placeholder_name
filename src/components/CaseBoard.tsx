@@ -30,7 +30,7 @@ export default function Caseboard({ data }: CaseBoardProps) {
                 <h2>This is a caseboard</h2>
                 <div>{data.title}</div>
 
-                <DragProvider>
+                <DragProvider parentRef={containerRef}>
                     <div className="ClueContainer" ref={containerRef}>
                         <ConnectionLayer caseId={data.id}></ConnectionLayer>
                         <AddZone

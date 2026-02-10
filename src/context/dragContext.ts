@@ -42,10 +42,10 @@ export interface DragState {
     ) => void;
     unregisterDroppable: (id: string) => void;
 
-    ConnectionState: ConnectionState | null;
-    startConnection: (id: string, point: { x: number; y: number }) => any;
-    updateMouse: (point: { x: number; y: number }) => any;
-    endConnection: (targetId?: string, caseId?: string) => any;
+    connectionState: ConnectionState | null;
+    startConnection: (id: string, point: { x: number; y: number }, caseId?: string) => any;
+    updateMouse: (e: MouseEvent) => any;
+    endConnection: (targetId?: string, point?: {x: number; y: number}, caseId?: string) => any;
 
     // activeDrop: ActiveElem;
     // setActiveDrop: (drop: {
