@@ -20,6 +20,10 @@ export type DraggableProps = {
     className?: string;
     payload?: {};
 
+    onDragStart?: (
+        dragPos: onDragEndPos,
+        payloadAction?: any,
+    ) => any;
     onDragEnd?: (
         dragPos: onDragEndPos,
         payloadAction?: any,
@@ -33,6 +37,7 @@ export default function Draggable({
     initialY,
     parentRef,
     className,
+    onDragStart,
     onDragEnd,
     onDragging,
 }: DraggableProps) {
@@ -106,6 +111,14 @@ export default function Draggable({
         };
 
         checkCollision();
+
+        onDragStart?.({
+                x: livePos.current.x,
+                y: livePos.current.y,
+                height: dragRect.height,
+                width: dragRect.width,
+                setPos: setPos,
+            },);
     };
 
     const onMouseMove = (e: MouseEvent) => {

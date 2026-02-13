@@ -116,6 +116,10 @@ export default function ClueItem({ clue_data, drag_data }: ClueItemProps) {
         }
     };
 
+    const updateDragOrder = () => {
+
+    }
+
     return (
         <>
             <Draggable
@@ -123,6 +127,7 @@ export default function ClueItem({ clue_data, drag_data }: ClueItemProps) {
                 initialY={drag_data.initialY}
                 parentRef={drag_data.parentRef}
                 className="ClueElement"
+                onDragStart={updateDragOrder}
                 onDragEnd={HandleClueDrop}
                 onDragging={updateCluePos}
             >

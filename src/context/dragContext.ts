@@ -47,11 +47,8 @@ export interface DragState {
     updateMouse: (e: MouseEvent) => any;
     endConnection: (targetId?: string, point?: {x: number; y: number}, caseId?: string) => any;
 
-    // activeDrop: ActiveElem;
-    // setActiveDrop: (drop: {
-    //     id: string;
-    //     ref: RefObject<HTMLElement | null>;
-    // } | null) => void;
+    dragOrder: Array<string | null>,
+    setDragOrder: (id: string) => any;
 };
 
 export const DragContext = createContext<DragState | null>(null);

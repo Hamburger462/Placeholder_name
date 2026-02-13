@@ -18,7 +18,6 @@ interface DragProvider {
 }
 
 export function DragProvider({ children, parentRef }: DragProvider) {
-    const [droppables, setDroppables] = useState<Droppable>(new Map());
     const [activeDrag, setActiveDrag] = useState<ActiveElem>(null);
 
     const connectionStateRef = useRef<ConnectionState | null>(null);
@@ -183,6 +182,8 @@ export function DragProvider({ children, parentRef }: DragProvider) {
         console.log("Connection ended");
     };
 
+    const [droppables, setDroppables] = useState<Droppable>(new Map());
+
     const registerDroppable = (
         id: string,
         ref: RefObject<HTMLElement | null>,
@@ -203,6 +204,10 @@ export function DragProvider({ children, parentRef }: DragProvider) {
         });
     };
 
+    const [dragOrder, setDrag] = useState<Array<string | null>>([]);
+
+    const setDragOrder = (id: string) => setDrag([...dragOrder, id]);
+
     const contextValue: DragState = {
         activeDrag,
         setActiveDrag,
@@ -215,6 +220,9 @@ export function DragProvider({ children, parentRef }: DragProvider) {
         startConnection,
         updateMouse,
         endConnection,
+
+        dragOrder,
+        setDragOrder
     };
 
     return (
