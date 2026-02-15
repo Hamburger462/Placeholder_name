@@ -47,8 +47,11 @@ export interface DragState {
     updateMouse: (e: MouseEvent) => any;
     endConnection: (targetId?: string, point?: {x: number; y: number}, caseId?: string) => any;
 
-    dragOrder: Array<string | null>,
-    setDragOrder: (id: string) => any;
+    dragOrder: Array<string | null>;
+    setDragOrder: (id: string) => void;
+
+    isModalActive: boolean;
+    setModal: (state: boolean) => void;
 };
 
 export const DragContext = createContext<DragState | null>(null);

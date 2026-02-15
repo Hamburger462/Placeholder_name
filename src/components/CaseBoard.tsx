@@ -1,9 +1,9 @@
 import type { Case } from "../types/clues";
-import ClueElement from "../components/ClueElement";
+
 import { useRef } from "react";
 import { useCluesForCase } from "../custom_hooks/useClueSelectors";
 
-import "./CaseBoard.css";
+import "../styles/CaseBoard.css"
 
 import { DragProvider } from "../context/dragProvider";
 
@@ -11,9 +11,11 @@ import type { ClueProps } from "../components/ClueElement";
 
 import type { DraggableProps } from "./Draggable";
 
+import ClueElement from "../components/ClueElement";
 import AddZone from "./Dropzones/AddZone";
 import DeleteZone from "./Dropzones/DeleteZone";
 import ConnectionLayer from "./ConnectionLayer";
+import ClueModal from "./ClueModal";
 
 type CaseBoardProps = {
     data: Case;
@@ -60,6 +62,8 @@ export default function Caseboard({ data }: CaseBoardProps) {
                                 ></ClueElement>
                             );
                         })}
+
+                        {/* <ClueModal></ClueModal> */}
                     </div>
                 </DragProvider>
             </div>

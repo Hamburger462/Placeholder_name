@@ -2,14 +2,12 @@ import { useState, useRef, useEffect, useContext } from "react";
 import { DragContext, type Droppable } from "../context/dragContext";
 
 export type onDragEndPos = {
-                x: number;
-            y: number;
-            height: number;
-            width: number;
-            setPos: React.Dispatch<
-                React.SetStateAction<{ x: number; y: number }>
-            >;
-        }
+    x: number;
+    y: number;
+    height: number;
+    width: number;
+    setPos: React.Dispatch<React.SetStateAction<{ x: number; y: number }>>;
+};
 
 export type DraggableProps = {
     children?: React.ReactNode;
@@ -18,16 +16,11 @@ export type DraggableProps = {
 
     parentRef: React.RefObject<HTMLDivElement | null>;
     className?: string;
+    z_index?: number;
     payload?: {};
 
-    onDragStart?: (
-        dragPos: onDragEndPos,
-        payloadAction?: any,
-    ) => any;
-    onDragEnd?: (
-        dragPos: onDragEndPos,
-        payloadAction?: any,
-    ) => any;
+    onDragStart?: (dragPos: onDragEndPos, payloadAction?: any) => any;
+    onDragEnd?: (dragPos: onDragEndPos, payloadAction?: any) => any;
     onDragging?: (dragPos: onDragEndPos, payloadAction?: any) => any;
 };
 
@@ -37,6 +30,7 @@ export default function Draggable({
     initialY,
     parentRef,
     className,
+    z_index,
     onDragStart,
     onDragEnd,
     onDragging,
@@ -113,12 +107,12 @@ export default function Draggable({
         checkCollision();
 
         onDragStart?.({
-                x: livePos.current.x,
-                y: livePos.current.y,
-                height: dragRect.height,
-                width: dragRect.width,
-                setPos: setPos,
-            },);
+            x: livePos.current.x,
+            y: livePos.current.y,
+            height: dragRect.height,
+            width: dragRect.width,
+            setPos: setPos,
+        });
     };
 
     const onMouseMove = (e: MouseEvent) => {
@@ -142,12 +136,12 @@ export default function Draggable({
         checkCollision();
 
         onDragging?.({
-                x: livePos.current.x,
-                y: livePos.current.y,
-                height: dragRect.height,
-                width: dragRect.width,
-                setPos: setPos,
-            },);
+            x: livePos.current.x,
+            y: livePos.current.y,
+            height: dragRect.height,
+            width: dragRect.width,
+            setPos: setPos,
+        });
     };
 
     const onMouseUp = () => {
@@ -188,10 +182,13 @@ export default function Draggable({
             ref={dragRef}
             style={{
                 position: "absolute",
-                left: pos.x,
-                top: pos.y,
+                // left: pos.x,
+                // top: pos.y,
+                transform: `translate(${pos.x}px, ${pos.y}px)`,
+                transition: isDragging ? "none" : "transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1)",
                 userSelect: "none",
-                cursor: isDragging ? "grabbing" : "grab",
+                // cursor: isDragging ? "grabbing" : "grab",
+                zIndex: z_index,
             }}
             onMouseDown={onMouseDown}
             className={className}

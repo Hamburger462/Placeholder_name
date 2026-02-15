@@ -1,7 +1,7 @@
 import Droppable from "../Droppable";
 
 
-import "../CaseBoard.css"
+import "../../styles/CaseBoard.css"
 interface DeleteZoneProps{
     id: string
 }

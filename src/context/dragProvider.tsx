@@ -182,6 +182,7 @@ export function DragProvider({ children, parentRef }: DragProvider) {
         console.log("Connection ended");
     };
 
+
     const [droppables, setDroppables] = useState<Droppable>(new Map());
 
     const registerDroppable = (
@@ -204,9 +205,18 @@ export function DragProvider({ children, parentRef }: DragProvider) {
         });
     };
 
+
     const [dragOrder, setDrag] = useState<Array<string | null>>([]);
 
-    const setDragOrder = (id: string) => setDrag([...dragOrder, id]);
+    const setDragOrder = (id: string) => {
+        setDrag((prev) => {
+            const filtered = prev.filter((item) => item !== id);
+            return [...filtered, id];
+        });
+    };
+
+
+    const [isModalActive, setModal] = useState<boolean>(false);
 
     const contextValue: DragState = {
         activeDrag,
@@ -222,7 +232,10 @@ export function DragProvider({ children, parentRef }: DragProvider) {
         endConnection,
 
         dragOrder,
-        setDragOrder
+        setDragOrder,
+
+        isModalActive,
+        setModal,
     };
 
     return (

@@ -1,13 +1,16 @@
+import "../../styles/CaseBoard.css"
+
 import Droppable from "../Droppable";
 import Draggable from "../Draggable";
-import { type RefObject } from "react";
-import { type Clue } from "../../types/clues";
+
+import { type RefObject, useContext } from "react";
 
 import { useCluesForCase } from "../../custom_hooks/useClueSelectors";
+import { type Clue } from "../../types/clues";
 
 import { type onDragEndPos } from "../Draggable";
 
-import "../CaseBoard.css";
+import { DragContext } from "../../context/dragContext";
 
 interface AddZoneProps {
     id: string;
@@ -17,6 +20,8 @@ interface AddZoneProps {
 
 export default function AddZone({ id, parentRef, caseId }: AddZoneProps) {
     const { pinClue } = useCluesForCase(caseId);
+
+    const context = useContext(DragContext);
 
     const handleDragEnd = (
         dragPos: onDragEndPos,
@@ -37,6 +42,8 @@ export default function AddZone({ id, parentRef, caseId }: AddZoneProps) {
 
         dragPos.setPos({ x: 0, y: 0 });
         pinClue(newClue);
+
+        context?.setModal(true);
     };
 
     return (

@@ -1,13 +1,13 @@
 import { useCluesForClue } from "../custom_hooks/useClueSelectors";
 import { useCluesForCase } from "../custom_hooks/useClueSelectors";
 
-import "./ClueElement.css";
+import "../styles/ClueElement.css"
 
 import Draggable from "./Draggable";
 import Droppable from "./Droppable";
 import type { DraggableProps } from "./Draggable";
 
-import { useContext, useRef } from "react";
+import { useContext, useRef} from "react";
 import { DragContext } from "../context/dragContext";
 
 import { type onDragEndPos } from "./Draggable";
@@ -116,9 +116,12 @@ export default function ClueItem({ clue_data, drag_data }: ClueItemProps) {
         }
     };
 
-    const updateDragOrder = () => {
+    const index = context?.dragOrder.indexOf(clue.id) ?? -1;
+    const zIndex = index >= 0 ? index + 1 : 0;
 
-    }
+    const updateDragOrder = () => {
+        context?.setDragOrder(clue.id);
+    };
 
     return (
         <>
@@ -127,6 +130,7 @@ export default function ClueItem({ clue_data, drag_data }: ClueItemProps) {
                 initialY={drag_data.initialY}
                 parentRef={drag_data.parentRef}
                 className="ClueElement"
+                z_index={zIndex}
                 onDragStart={updateDragOrder}
                 onDragEnd={HandleClueDrop}
                 onDragging={updateCluePos}

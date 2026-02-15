@@ -8,9 +8,6 @@ interface ConnectionLayerProps {
 export default function ConnectionLayer({ caseId }: ConnectionLayerProps) {
     const { connectionsByCaseId } = useConnectionsForCase(caseId);
 
-    // ADD CONNECTION RENDERING AND RE-RENDER THEM EACH TIME EITHER OF CLUES GET SHIFTED TO A DIFFERENT POSITION
-    // ALSO ADD ROUTING AND SOME PAGES FOR AUTHORIZATION AND STORING CASES
-
     const renderConnection = (conn: Connection) => {
         const from = conn.pos1;
         const to = conn.id === "TempConnection" ? conn.cursorPos : conn.pos2;
