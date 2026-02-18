@@ -15,10 +15,8 @@ export default function ConnectionLayer({ caseId }: ConnectionLayerProps) {
         if (!from || !to) return null;
 
         return (
-            <>
-                {/* The line */}
+            <g key={conn.id}>
                 <line
-                    key={conn.id + "-line"}
                     stroke="black"
                     strokeWidth={2}
                     x1={from.x}
@@ -27,18 +25,16 @@ export default function ConnectionLayer({ caseId }: ConnectionLayerProps) {
                     y2={to.y}
                 />
 
-                {/* Small circle at cursor for temp connection */}
-                {conn.id === "TempConnection" && to && (
+                {conn.id === "TempConnection" && (
                     <circle
-                        key={conn.id + "-circle"}
                         cx={to.x}
                         cy={to.y}
-                        r={10} // radius of circle
-                        fill="black" // color of circle
-                        pointerEvents="none" // allows clicks to pass through
+                        r={10}
+                        fill="black"
+                        pointerEvents="none"
                     />
                 )}
-            </>
+            </g>
         );
     };
 

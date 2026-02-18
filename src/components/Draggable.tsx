@@ -4,6 +4,8 @@ import { DragContext, type Droppable } from "../context/dragContext";
 export type onDragEndPos = {
     x: number;
     y: number;
+    startX: number;
+    startY: number;
     height: number;
     width: number;
     setPos: React.Dispatch<React.SetStateAction<{ x: number; y: number }>>;
@@ -39,6 +41,8 @@ export default function Draggable({
 
     const [isDragging, setDragging] = useState(false);
     const [pos, setPos] = useState({ x: initialX, y: initialY });
+
+    const startPos = useRef({ x: 0, y: 0 });
     const livePos = useRef({ x: 0, y: 0 });
 
     const offset = useRef({ x: 0, y: 0 });
@@ -104,13 +108,23 @@ export default function Draggable({
             y: e.clientY - pos.y,
         };
 
+        startPos.current = {
+            x: pos.x,
+            y: pos.y,
+        };
+
         checkCollision();
 
         onDragStart?.({
             x: livePos.current.x,
             y: livePos.current.y,
+
+            startX: startPos.current.x,
+            startY: startPos.current.y,
+
             height: dragRect.height,
             width: dragRect.width,
+
             setPos: setPos,
         });
     };
@@ -138,8 +152,13 @@ export default function Draggable({
         onDragging?.({
             x: livePos.current.x,
             y: livePos.current.y,
+
+            startX: startPos.current.x,
+            startY: startPos.current.y,
+
             height: dragRect.height,
             width: dragRect.width,
+
             setPos: setPos,
         });
     };
@@ -155,8 +174,13 @@ export default function Draggable({
             {
                 x: livePos.current.x,
                 y: livePos.current.y,
+
+                startX: startPos.current.x,
+                startY: startPos.current.y,
+
                 height: dragRect!.height,
                 width: dragRect!.width,
+
                 setPos: setPos,
             },
             currentDrop.current,
@@ -185,7 +209,9 @@ export default function Draggable({
                 // left: pos.x,
                 // top: pos.y,
                 transform: `translate(${pos.x}px, ${pos.y}px)`,
-                transition: isDragging ? "none" : "transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1)",
+                transition: isDragging
+                    ? "none"
+                    : "transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1)",
                 userSelect: "none",
                 // cursor: isDragging ? "grabbing" : "grab",
                 zIndex: z_index,

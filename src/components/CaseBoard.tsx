@@ -38,10 +38,9 @@ export default function Caseboard({ data }: CaseBoardProps) {
                         <AddZone
                             parentRef={containerRef}
                             caseId={data.id}
-                            id="Add"
                         ></AddZone>
 
-                        <DeleteZone id="DEATHZONE"></DeleteZone>
+                        <DeleteZone caseId={data.id}></DeleteZone>
 
                         {cluesByCaseId.map((elem) => {
                             const clue_data: ClueProps = {
@@ -63,7 +62,7 @@ export default function Caseboard({ data }: CaseBoardProps) {
                             );
                         })}
 
-                        {/* <ClueModal></ClueModal> */}
+                        <ClueModal></ClueModal>
                     </div>
                 </DragProvider>
             </div>

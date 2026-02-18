@@ -3,13 +3,13 @@ import Droppable from "../Droppable";
 
 import "../../styles/CaseBoard.css"
 interface DeleteZoneProps{
-    id: string
+    caseId: string
 }
 
 
-export default function DeleteZone({id} : DeleteZoneProps){
+export default function DeleteZone({caseId} : DeleteZoneProps){
     return (
-    <Droppable id={id} className="ClueDrop DeleteZoneDrop" >
+    <Droppable id={`DEATHZONE-${caseId}`} className="ClueDrop DeleteZoneDrop" >
         <div>Delete Clue</div>
     </Droppable>
     )

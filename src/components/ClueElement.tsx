@@ -1,13 +1,13 @@
 import { useCluesForClue } from "../custom_hooks/useClueSelectors";
 import { useCluesForCase } from "../custom_hooks/useClueSelectors";
 
-import "../styles/ClueElement.css"
+import "../styles/ClueElement.css";
 
 import Draggable from "./Draggable";
 import Droppable from "./Droppable";
 import type { DraggableProps } from "./Draggable";
 
-import { useContext, useRef} from "react";
+import { useContext, useRef } from "react";
 import { DragContext } from "../context/dragContext";
 
 import { type onDragEndPos } from "./Draggable";
@@ -37,20 +37,40 @@ export default function ClueItem({ clue_data, drag_data }: ClueItemProps) {
     const { unpinConnection, renewConnection } = useConnections();
 
     const HandleClueDrop = (
-        _: {
-            x: number;
-            y: number;
-            setPos: React.Dispatch<
-                React.SetStateAction<{ x: number; y: number }>
-            >;
-        },
+        dragPos: onDragEndPos,
         droppedId?: string | null,
     ) => {
-        if (droppedId == "DEATHZONE") {
+        const dropId = droppedId?.split("-")[0];
+
+        if (dropId == "DEATHZONE") {
             unpinClue(clue.id);
             connectionsByCaseId.filter((value) => {
                 if (value.startId == clue.id || value.endId == clue.id) {
                     unpinConnection(value.id);
+                }
+            });
+        } else if (dropId === "ADDZONE" || !dropId) {
+            // Snap back
+            dragPos.setPos({ x: dragPos.startX, y: dragPos.startY });
+
+            // Use the original center of the clue element
+            const resetPoint = {
+                x: dragPos.startX + dragPos.width / 2,
+                y: dragPos.startY,
+            };
+
+            connectionsByCaseId.forEach((conn) => {
+                if (conn.startId === clue.id) {
+                    renewConnection({
+                        id: conn.id,
+                        changes: { pos1: resetPoint },
+                    });
+                }
+                if (conn.endId === clue.id) {
+                    renewConnection({
+                        id: conn.id,
+                        changes: { pos2: resetPoint },
+                    });
                 }
             });
         }

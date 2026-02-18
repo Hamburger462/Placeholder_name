@@ -13,12 +13,11 @@ import { type onDragEndPos } from "../Draggable";
 import { DragContext } from "../../context/dragContext";
 
 interface AddZoneProps {
-    id: string;
     parentRef: RefObject<HTMLDivElement | null>;
     caseId: string;
 }
 
-export default function AddZone({ id, parentRef, caseId }: AddZoneProps) {
+export default function AddZone({ parentRef, caseId }: AddZoneProps) {
     const { pinClue } = useCluesForCase(caseId);
 
     const context = useContext(DragContext);
@@ -47,7 +46,7 @@ export default function AddZone({ id, parentRef, caseId }: AddZoneProps) {
     };
 
     return (
-        <Droppable id={id} className="ClueDrop AddZoneDrop">
+        <Droppable id={`ADDZONE-${caseId}`} className="ClueDrop AddZoneDrop">
             <Draggable
                 initialX={0}
                 initialY={0}
