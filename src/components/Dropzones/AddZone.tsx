@@ -42,7 +42,7 @@ export default function AddZone({ parentRef, caseId }: AddZoneProps) {
         dragPos.setPos({ x: 0, y: 0 });
         pinClue(newClue);
 
-        context?.setModal(true);
+        context?.setActiveClue(newClue.id);
     };
 
     return (

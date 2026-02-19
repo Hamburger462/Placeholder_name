@@ -7,7 +7,7 @@ import Draggable from "./Draggable";
 import Droppable from "./Droppable";
 import type { DraggableProps } from "./Draggable";
 
-import { useContext, useRef } from "react";
+import React, { useContext, useRef } from "react";
 import { DragContext } from "../context/dragContext";
 
 import { type onDragEndPos } from "./Draggable";
@@ -16,6 +16,8 @@ import {
     useConnectionsForCase,
     useConnections,
 } from "../custom_hooks/useConnectionSelector";
+
+import { Button } from "@mui/material";
 
 export interface ClueProps {
     clueId: string;
@@ -143,6 +145,13 @@ export default function ClueItem({ clue_data, drag_data }: ClueItemProps) {
         context?.setDragOrder(clue.id);
     };
 
+    const editClue = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        e.preventDefault();
+
+        context?.setActiveClue(clue.id);
+    }
+
     return (
         <>
             <Draggable
@@ -161,7 +170,10 @@ export default function ClueItem({ clue_data, drag_data }: ClueItemProps) {
                     className="ConnectionDrop"
                     onMouseDown={checkConnection}
                 ></Droppable>
-                <div>Title: {clue.title}</div>
+                <div style={{display:"flex", justifyContent:"space-between"}}>
+                    Title: {clue.title}
+                    <Button variant="contained" onClick={editClue}>Edit</Button>
+                </div>
             </Draggable>
         </>
     );

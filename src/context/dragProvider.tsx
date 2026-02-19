@@ -216,7 +216,7 @@ export function DragProvider({ children, parentRef }: DragProvider) {
     };
 
 
-    const [isModalActive, setModal] = useState<boolean>(false);
+    const [activeClue, setActiveClue] = useState<string | null>(null);
 
     const contextValue: DragState = {
         activeDrag,
@@ -234,8 +234,8 @@ export function DragProvider({ children, parentRef }: DragProvider) {
         dragOrder,
         setDragOrder,
 
-        isModalActive,
-        setModal,
+        activeClue,
+        setActiveClue,
     };
 
     return (

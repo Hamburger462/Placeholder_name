@@ -1,5 +1,7 @@
 import { DragContext } from "../context/dragContext";
-import { useContext } from "react";
+import { useContext, useEffect, useRef } from "react";
+
+import { useCluesForClue } from "../custom_hooks/useClueSelectors";
 
 import React from "react";
 
@@ -12,6 +14,7 @@ import {
     Button,
 } from "@mui/material";
 import { type TransitionProps } from "@mui/material/transitions";
+import { type Clue } from "../types/clues";
 
 // type ClueModalProps = {
 //     children?: React.ReactNode;
@@ -26,22 +29,24 @@ const Transition = React.forwardRef(function Transition(
 
 export default function ClueModal() {
     const context = useContext(DragContext);
+    const clueRef = useRef<Clue>(null);
+
     if (!context) return null;
 
     return (
         <Dialog
-            open={context.isModalActive}
-            onClose={() => context.setModal(false)}
+            open={Boolean(context.activeClue)}
+            onClose={() => context.setActiveClue(null)}
             slots={{
                 transition: Transition
             }}
             keepMounted
             disableRestoreFocus
         >
-            <DialogTitle>Slide Dialog</DialogTitle>
+            <DialogTitle>{clueRef.current?.title}</DialogTitle>
             <DialogContent>This dialog slides in from the left.</DialogContent>
             <DialogActions>
-                <Button onClick={() => context.setModal(false)}>Close</Button>
+                <Button onClick={() => context.setActiveClue(null)}>Close</Button>
             </DialogActions>
         </Dialog>
     );

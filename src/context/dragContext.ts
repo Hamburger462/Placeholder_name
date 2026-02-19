@@ -50,8 +50,8 @@ export interface DragState {
     dragOrder: Array<string | null>;
     setDragOrder: (id: string) => void;
 
-    isModalActive: boolean;
-    setModal: (state: boolean) => void;
+    activeClue: string | null;
+    setActiveClue: (state: string | null) => void;
 };
 
 export const DragContext = createContext<DragState | null>(null);
