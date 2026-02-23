@@ -38,7 +38,19 @@ export default function ConnectionLayer({ caseId }: ConnectionLayerProps) {
         );
     };
 
+    // position: absolute;
+    // width: 100%;
+    // height: 100%;
+    // z-index: 100;
+    // pointer-events: none;
+
     return (
-        <svg>{connectionsByCaseId.map((value) => renderConnection(value))}</svg>
+        <svg style={{
+            position: "absolute",
+            width: "100%",
+            height: "100%",
+            zIndex: 100,
+            pointerEvents: "none",
+        }}>{connectionsByCaseId.map((value) => renderConnection(value))}</svg>
     );
 }

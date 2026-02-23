@@ -6,7 +6,7 @@ import { useCases } from "./custom_hooks/useCasesSelectors";
 function App() {
     const [caseTitle, useCaseTitle] = useState("");
 
-    const { allCases, pinCase, unpinCase, renewCase } = useCases();
+    const { allCases, pinCase } = useCases();
 
     function addCase() {
         const newCase: Case = {

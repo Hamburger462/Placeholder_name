@@ -18,7 +18,7 @@ interface AddZoneProps {
 }
 
 export default function AddZone({ parentRef, caseId }: AddZoneProps) {
-    const { pinClue } = useCluesForCase(caseId);
+    const { cluesByCaseId, pinClue } = useCluesForCase(caseId);
 
     const context = useContext(DragContext);
 
@@ -27,13 +27,14 @@ export default function AddZone({ parentRef, caseId }: AddZoneProps) {
         droppedId?: string | null,
     ) => {
         // If dropped over ANY droppable → reset
-        if (droppedId) {
+        if (droppedId?.split("-")[0] !== "ConnectionDrop" && droppedId !== null) {
             dragPos.setPos({ x: 0, y: 0 });
             return;
         }
 
         // If dropped over nothing → create clue
         const newClue: Clue = {
+            title: `Clue-${cluesByCaseId.length + 1}`,
             id: crypto.randomUUID(),
             caseId,
             position: { x: dragPos.x, y: dragPos.y },
