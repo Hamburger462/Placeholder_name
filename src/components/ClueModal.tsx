@@ -68,7 +68,7 @@ export default function ClueModal() {
                 },
                 paper: {
                     sx: {
-                        width: "50%",
+                        width: "30%",
                         height: "100%",
                     },
                 },

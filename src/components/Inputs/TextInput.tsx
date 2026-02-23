@@ -11,12 +11,10 @@ type TextInputProps = {
 export default function TextInput({ content, setContent }: TextInputProps) {
     const inputRef = useRef<HTMLDivElement>(null);
     const quillRef = useRef<Quill>(null);
+    
 
     useEffect(() => {
         if (!inputRef.current) return;
-
-        // Clear container in case it has leftover DOM (important in Dialogs)
-        inputRef.current.innerHTML = "";
 
         const quill = new Quill(inputRef.current, {
             theme: "snow",
@@ -34,6 +32,7 @@ export default function TextInput({ content, setContent }: TextInputProps) {
 
         // Optionally set initial content
         if (content) {
+            console.log(content)
             quill.setText(content);
         }
 
@@ -47,6 +46,10 @@ export default function TextInput({ content, setContent }: TextInputProps) {
             quill.off("text-change", handler);
         };
     }, []);
+
+    useEffect(() => {
+        quillRef.current?.setText(content);
+    }, [content])
 
     return (
         <>
