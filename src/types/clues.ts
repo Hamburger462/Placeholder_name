@@ -1,13 +1,13 @@
 export type MediaItem =
     | {
-          id: number;
-          clueId: number;
+          id: string;
+          clueId: string;
           type: "text";
           text: string;
       }
     | {
-          id: number;
-          clueId: number;
+          id: string;
+          clueId: string;
           type: "image" | "video" | "audio";
           url: string;
           name?: string;
@@ -27,7 +27,7 @@ export type Clue = {
     id: string;
     caseId: string;
     title?: string;
-    content?: Array<string>;
+    mediaIds?: Array<string>;
     position: {
         x: number;
         y: number;
@@ -37,5 +37,5 @@ export type Clue = {
 export type Case = {
     id: string;
     title: string;
-    clueIds ?: Array<number>;
+    clueIds ?: Array<string>;
 };

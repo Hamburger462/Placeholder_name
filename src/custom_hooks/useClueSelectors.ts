@@ -19,7 +19,7 @@ export const makeSelectCluesByCaseId = () =>
     createSelector(
         [CluesSelector.selectAll, (_: RootState, caseId: string) => caseId],
         (clues, caseId) => clues.filter((clue) => clue.caseId === caseId),
-    );
+);
 
 export function useCluesForCase(caseId: string) {
     const dispatch = useAppDispatch();

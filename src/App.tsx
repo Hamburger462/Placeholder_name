@@ -12,6 +12,7 @@ function App() {
         const newCase: Case = {
             id: crypto.randomUUID(),
             title: caseTitle,
+            clueIds: []
         };
 
         pinCase(newCase);

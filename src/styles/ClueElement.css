@@ -1,6 +1,6 @@
 .ClueElement{
     border: 2px solid;
-    min-width: 200px;
+    width: 200px;
     padding: 10px;
     background-color: green;
 }

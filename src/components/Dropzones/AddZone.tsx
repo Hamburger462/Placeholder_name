@@ -7,6 +7,7 @@ import { type RefObject, useContext } from "react";
 
 import { useCluesForCase } from "../../custom_hooks/useClueSelectors";
 import { type Clue } from "../../types/clues";
+import { useCases } from "../../custom_hooks/useCasesSelectors";
 
 import { type onDragEndPos } from "../Draggable";
 
@@ -19,8 +20,10 @@ interface AddZoneProps {
 
 export default function AddZone({ parentRef, caseId }: AddZoneProps) {
     const { cluesByCaseId, pinClue } = useCluesForCase(caseId);
+    const { allCases, renewCase } = useCases();
 
     const context = useContext(DragContext);
+    const caseItem = allCases.find((value) => value.id == caseId);
 
     const handleDragEnd = (
         dragPos: onDragEndPos,
@@ -42,6 +45,10 @@ export default function AddZone({ parentRef, caseId }: AddZoneProps) {
 
         dragPos.setPos({ x: 0, y: 0 });
         pinClue(newClue);
+
+        renewCase({id: caseId, changes: {
+            clueIds: [...caseItem?.clueIds as Array<string>, newClue.id]
+        }})
 
         context?.setActiveClue(newClue.id);
     };
