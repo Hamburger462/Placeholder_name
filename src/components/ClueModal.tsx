@@ -23,6 +23,7 @@ import ContentBlock from "./Inputs/ContentBlock";
 
 import { type MediaItem } from "../types/clues";
 import { useMedia } from "../custom_hooks/useMediaSelectors";
+import ContentList from "./Inputs/ContentList";
 
 // type ClueModalProps = {
 //     children?: React.ReactNode;
@@ -131,9 +132,7 @@ export default function ClueModal() {
                     name="Title"
                     className="ModalTitle"
                 ></TextInput>
-                {clueMedia.map((value, index) => (
-                    <ContentBlock key={value.id}></ContentBlock>
-                ))}
+                <ContentList></ContentList>
             </Paper>
         </Dialog>
     );
