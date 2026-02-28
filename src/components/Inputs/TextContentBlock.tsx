@@ -3,19 +3,21 @@ import "quill/dist/quill.snow.css";
 
 import { useRef, useEffect } from "react";
 
+import { useMediaForMedia } from "../../custom_hooks/useMediaSelectors";
+
 type TextContentBlockProps = {
-    content: any;
-    setContent: React.Dispatch<any>;
+    id: string;
     isSingleLine?: boolean;
 };
 
 export default function TextContentBlock({
-    content,
-    setContent,
+    id,
     isSingleLine,
 }: TextContentBlockProps) {
     const inputRef = useRef<HTMLDivElement>(null);
     const quillRef = useRef<Quill>(null);
+
+    const {mediaForMedia, renewMedia} = useMediaForMedia(id);
 
     useEffect(() => {
         if (!inputRef.current) return;
@@ -39,7 +41,7 @@ export default function TextContentBlock({
             if (source !== "user") return;
 
             const text = quill.getText();
-            setContent(text);
+            renewMedia({text: text});
         };
 
         quill.on("text-change", handler);
@@ -55,6 +57,8 @@ export default function TextContentBlock({
         };
     }, []);
 
+    if(mediaForMedia.type != "text") return null;
+
     useEffect(() => {
         const quill = quillRef.current;
         if (!quill) return;
@@ -62,10 +66,10 @@ export default function TextContentBlock({
         const current = quill.getText();
 
         // Only update if different
-        if (content !== current) {
-            quill.setText(content || "");
+        if (mediaForMedia.text !== current) {
+            quill.setText(mediaForMedia.text || "");
         }
-    }, [content]);
+    }, [mediaForMedia]);
 
 
     return (

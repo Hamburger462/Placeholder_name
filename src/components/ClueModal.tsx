@@ -17,13 +17,10 @@ import {
 } from "@mui/material";
 import { type TransitionProps } from "@mui/material/transitions";
 
-import TextInput from "./Inputs/TextInput";
-import TextContentBlock from "./Inputs/TextContentBlock";
-import ContentBlock from "./Inputs/ContentBlock";
-
 import { type MediaItem } from "../types/clues";
 import { useMedia } from "../custom_hooks/useMediaSelectors";
 import ContentList from "./Inputs/ContentList";
+import TextInput from "./Inputs/TextInput";
 
 // type ClueModalProps = {
 //     children?: React.ReactNode;
@@ -39,20 +36,20 @@ const Transition = React.forwardRef(function Transition(
 export default function ClueModal() {
     const context = useContext(DragContext);
 
-    const [title, setTitle] = useState<string | undefined>("");
-    const [media, setMedia] = useState<Array<MediaItem> | undefined>([]);
-
     if (!context) return null;
 
-    const { allMedia, pinMedia, unpinMedia, renewMedia } = useMedia();
+    const { pinMedia } = useMedia();
+
     const { clue, renewClue } = useCluesForClue(context!.activeClue ?? "");
-    const clueMedia = clue ? allMedia.filter((value) => value.clueId == clue.id): [];
+
+    const [title, setTitle] = useState<string | undefined>("");
+    const [media, setMedia] = useState<Array<string>>([]);
 
     useEffect(() => {
         if (!clue) return;
 
         setTitle(clue.title);
-        setMedia(clueMedia);
+        setMedia(clue.mediaIds ? clue.mediaIds : []);
     }, [context.activeClue]);
 
     const saveClueChanges = () => {
@@ -64,6 +61,8 @@ export default function ClueModal() {
     };
 
     const addMediaItem = () => {
+        if (!clue) return;
+
         const newMedia: MediaItem = {
             id: crypto.randomUUID(),
             clueId: clue.id,
@@ -72,6 +71,12 @@ export default function ClueModal() {
         };
 
         pinMedia(newMedia);
+
+        const updatedMedia = [...(media ?? []), newMedia.id];
+
+        setMedia(updatedMedia);
+
+        renewClue({ mediaIds: updatedMedia }); 
     };
 
     return (
@@ -132,7 +137,7 @@ export default function ClueModal() {
                     name="Title"
                     className="ModalTitle"
                 ></TextInput>
-                <ContentList></ContentList>
+                <ContentList clue={clue ? clue : undefined}></ContentList>
             </Paper>
         </Dialog>
     );

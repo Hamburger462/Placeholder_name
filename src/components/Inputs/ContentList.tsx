@@ -1,18 +1,24 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useMemo} from "react";
 import ContentBlock from "./ContentBlock";
 
-type Item = {
-    id: string;
-    content: string;
+import type { Clue } from "../../types/clues";
+import { useCluesForClue } from "../../custom_hooks/useClueSelectors";
+
+import { useMedia } from "../../custom_hooks/useMediaSelectors";
+
+type ContentListProps = {
+    clue?: Clue;
 };
 
-export default function ContentList() {
-    const [items, setItems] = useState<Item[]>([
-        { id: "1", content: "Block 1" },
-        { id: "2", content: "Block 2" },
-        { id: "3", content: "Block 3" },
-        { id: "4", content: "Block 4" },
-    ]);
+export default function ContentList({ clue }: ContentListProps) {
+    const { allMediaEntities } = useMedia();
+
+    const items = useMemo(() => {
+        if (!clue?.mediaIds) return [];
+        return clue.mediaIds.map((id) => allMediaEntities[id]).filter(Boolean);
+    }, [clue?.mediaIds, allMediaEntities]);
+
+    const { renewClue } = useCluesForClue(clue ? clue.id : "");
 
     const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
     const [placeholderIndex, setPlaceholderIndex] = useState<number | null>(
@@ -26,18 +32,14 @@ export default function ContentList() {
         // setPlaceholderIndex(index);
     };
 
-    useEffect(() => {
-        console.log(placeholderIndex);
-    }, [placeholderIndex]);
-
     const handleDragEnd = () => {
         if (
             draggedIndex !== null &&
             placeholderIndex !== null &&
             draggedIndex !== placeholderIndex
         ) {
-            const updated = [...items];
-            if (placeholderIndex < items.length) {
+            const updated = [...(clue?.mediaIds as Array<string>)];
+            if (placeholderIndex < clue!.mediaIds!.length) {
                 const placeholder = updated[placeholderIndex];
                 updated[placeholderIndex] = updated[draggedIndex];
                 updated[draggedIndex] = placeholder;
@@ -46,7 +48,7 @@ export default function ContentList() {
                 updated[placeholderIndex - 1] = updated[draggedIndex];
                 updated[draggedIndex] = placeholder;
             }
-            setItems(updated);
+            renewClue({ mediaIds: updated });
         }
 
         setDraggedIndex(null);
@@ -103,13 +105,12 @@ export default function ContentList() {
 
                     <ContentBlock
                         id={item.id}
+                        type={item.type}
                         index={index}
                         movePlaceholder={movePlaceholder}
                         onDragStart={handleDragStart}
                         onDragEnd={handleDragEnd}
-                    >
-                        {item.content}
-                    </ContentBlock>
+                    ></ContentBlock>
                 </React.Fragment>
             ))}
             {placeholderIndex ? (
