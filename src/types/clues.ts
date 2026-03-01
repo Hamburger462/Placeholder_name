@@ -2,6 +2,11 @@ export type MediaItem =
     | {
           id: string;
           clueId: string;
+          type: "";
+      }
+    | {
+          id: string;
+          clueId: string;
           type: "text";
           text: string;
       }
@@ -18,9 +23,9 @@ export type Connection = {
     caseId: string | undefined;
     startId: string | undefined | null;
     endId: string | undefined | null;
-    pos1?: {x: number, y: number};
-    pos2?: {x: number, y: number};
-    cursorPos?: {x: number, y: number};
+    pos1?: { x: number; y: number };
+    pos2?: { x: number; y: number };
+    cursorPos?: { x: number; y: number };
 };
 
 export type Clue = {
@@ -37,5 +42,5 @@ export type Clue = {
 export type Case = {
     id: string;
     title: string;
-    clueIds ?: Array<string>;
+    clueIds?: Array<string>;
 };

@@ -218,6 +218,8 @@ export function DragProvider({ children, parentRef }: DragProvider) {
 
     const [activeClue, setActiveClue] = useState<string | null>(null);
 
+    const [activeContent, setActiveContent] = useState<string | null>(null);
+
     const contextValue: DragState = {
         activeDrag,
         setActiveDrag,
@@ -236,6 +238,9 @@ export function DragProvider({ children, parentRef }: DragProvider) {
 
         activeClue,
         setActiveClue,
+
+        activeContent,
+        setActiveContent,
     };
 
     return (

@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
-import { useRef } from "react";
-
+import EmptyContentBlock from "./EmptyContentBlock";
 import TextContentBlock from "./TextContentBlock";
+import MediaContentBlock from "./MediaContentBlock";
 
 type ContentBlockProps = {
     id: string;
@@ -9,9 +8,10 @@ type ContentBlockProps = {
     index: number;
 
     movePlaceholder: (hoverIndex: number, clientY: number) => void;
-    onDragStart: (index: number) => void;
+    onDragStart: (index: number, id: string) => void;
     onDragEnd: () => void;
-    onDragLeave?: () => void;
+    onDragLeave: (index: number) => void;
+    isDragging?: boolean;
 
     // children?: React.ReactNode;
 };
@@ -25,39 +25,37 @@ export default function ContentBlock({
     onDragStart,
     onDragEnd,
     onDragLeave,
+    isDragging,
 
     // children,
 }: ContentBlockProps) {
-    const renderedContent = useRef<React.ReactNode>(null);
-
-    useEffect(() => {
-        switch (type) {
-            case "text":
-                renderedContent.current = <TextContentBlock id={id}></TextContentBlock>;
-                break;
-        }
-    }, []);
-
     return (
         <div
             draggable
-            onDragStart={() => onDragStart(index)}
+            onDragStart={() => onDragStart(index, id)}
             onDragEnd={onDragEnd}
             onDragOver={(e) => {
                 e.preventDefault();
                 movePlaceholder(index, e.clientY);
             }}
-            onDragLeave={onDragLeave}
+            onDragLeave={() => onDragLeave(index)}
             style={{
                 padding: "12px",
                 border: "1px solid #aaa",
                 background: "white",
                 marginBottom: "6px",
                 cursor: "grab",
+                // opacity: isDragging ? 0.5 : 1,
             }}
         >
-            <div style={{ fontSize: 12, opacity: 0.5 }}>Grab me</div>
-            {renderedContent.current}
+
+            {type === "" && <EmptyContentBlock id={id} />}
+            {type === "text" && <TextContentBlock id={id} />}
+            {(type === "image" ||
+                type === "video" ||
+                type === "audio") && (
+                <MediaContentBlock id={id} />
+            )}
         </div>
     );
 }

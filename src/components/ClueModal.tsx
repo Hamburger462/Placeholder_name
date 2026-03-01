@@ -19,8 +19,10 @@ import { type TransitionProps } from "@mui/material/transitions";
 
 import { type MediaItem } from "../types/clues";
 import { useMedia } from "../custom_hooks/useMediaSelectors";
+
 import ContentList from "./Inputs/ContentList";
 import TextInput from "./Inputs/TextInput";
+import DeleteContentBlock from "./Inputs/DeleteContentBlock";
 
 // type ClueModalProps = {
 //     children?: React.ReactNode;
@@ -66,8 +68,7 @@ export default function ClueModal() {
         const newMedia: MediaItem = {
             id: crypto.randomUUID(),
             clueId: clue.id,
-            type: "text",
-            text: "",
+            type: "",
         };
 
         pinMedia(newMedia);
@@ -76,7 +77,7 @@ export default function ClueModal() {
 
         setMedia(updatedMedia);
 
-        renewClue({ mediaIds: updatedMedia }); 
+        renewClue({ mediaIds: updatedMedia });
     };
 
     return (
@@ -110,27 +111,44 @@ export default function ClueModal() {
                 },
             }}
         >
-            <Container sx={{ flex: "1", padding: 0 }}>
+            <Container
+                disableGutters
+                sx={{
+                    width: "30%",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                }}
+            >
                 <Paper>
-                    <Button
-                        sx={{
-                            color: "black",
-                            fontWeight: 600,
-                            width: "100%",
-                        }}
-                        onClick={addMediaItem}
-                    >
-                        Add content
-                    </Button>
                     <DialogActions>
-                        <Button onClick={saveClueChanges}>Save</Button>
+                        <Button
+                            sx={{
+                                color: "black",
+                                fontWeight: 600,
+                                width: "100%",
+                            }}
+                            onClick={addMediaItem}
+                        >
+                            Add content
+                        </Button>
+                    </DialogActions>
+                    {/* <DialogActions>
+                        <Button sx={{
+                            color: "black",
+                            fontWeight: 500,
+                            width: "100%",
+                        }} onClick={saveClueChanges}>Save changes</Button>
                         <Button onClick={() => context.setActiveClue(null)}>
                             Close
                         </Button>
-                    </DialogActions>
+                    </DialogActions> */}
                 </Paper>
+
+                <DeleteContentBlock></DeleteContentBlock>
             </Container>
-            <Paper sx={{ flex: "4", padding: "10px" }}>
+
+            <Paper sx={{ flex: "4", padding: "10px", overflowY: "auto" }}>
                 <TextInput
                     content={title}
                     setContent={setTitle}

@@ -52,6 +52,9 @@ export interface DragState {
 
     activeClue: string | null;
     setActiveClue: (state: string | null) => void;
+
+    activeContent: string | null;
+    setActiveContent: (state: string | null) => void;
 };
 
 export const DragContext = createContext<DragState | null>(null);

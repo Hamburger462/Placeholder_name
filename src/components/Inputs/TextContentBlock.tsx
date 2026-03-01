@@ -67,7 +67,7 @@ export default function TextContentBlock({
 
         // Only update if different
         if (mediaForMedia.text !== current) {
-            quill.setText(mediaForMedia.text || "");
+            quill.setText(mediaForMedia.text || "Text is here");
         }
     }, [mediaForMedia]);
 

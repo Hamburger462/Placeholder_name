@@ -1,16 +1,19 @@
-import React, { useState, useRef, useMemo} from "react";
-import ContentBlock from "./ContentBlock";
+import React, { useState, useRef, useMemo, useContext, useEffect } from "react";
+import { DragContext } from "../../context/dragContext";
 
 import type { Clue } from "../../types/clues";
 import { useCluesForClue } from "../../custom_hooks/useClueSelectors";
 
 import { useMedia } from "../../custom_hooks/useMediaSelectors";
+import ContentBlock from "./ContentBlock";
 
 type ContentListProps = {
     clue?: Clue;
 };
 
 export default function ContentList({ clue }: ContentListProps) {
+    const context = useContext(DragContext);
+
     const { allMediaEntities } = useMedia();
 
     const items = useMemo(() => {
@@ -27,9 +30,12 @@ export default function ContentList({ clue }: ContentListProps) {
 
     const containerRef = useRef<HTMLDivElement>(null);
 
-    const handleDragStart = (index: number) => {
+    // useEffect(() => {console.log(context?.activeContent)}, [context?.activeContent])
+
+    const handleDragStart = (index: number, id: string) => {
         setDraggedIndex(index);
-        // setPlaceholderIndex(index);
+        if (!clue?.mediaIds) return;
+        context?.setActiveContent(id);
     };
 
     const handleDragEnd = () => {
@@ -53,6 +59,7 @@ export default function ContentList({ clue }: ContentListProps) {
 
         setDraggedIndex(null);
         setPlaceholderIndex(null);
+        context?.setActiveContent(null);
     };
 
     const movePlaceholder = (hoverIndex: number, clientY: number) => {
@@ -74,23 +81,34 @@ export default function ContentList({ clue }: ContentListProps) {
         const bottomMiddle = hoverRect.bottom - hoverRect.height / 3;
         const upperMiddle = hoverRect.top + hoverRect.height / 3;
 
-        if (clientY > bottomMiddle) {
-            console.log("bottom");
-            setPlaceholderIndex(hoverIndex + 1);
+        if (draggedIndex - hoverIndex >= 1) {
+            console.log("Going up")
+            if (clientY < upperMiddle) {
+                setPlaceholderIndex(hoverIndex);
+                return;
+            }
         }
 
-        if (hoverIndex - draggedIndex != 1)
-            if (clientY < upperMiddle) {
-                console.log("top");
-                setPlaceholderIndex(hoverIndex);
+        if (draggedIndex - hoverIndex <= 0) {
+            console.log("Going down")
+            if (clientY > bottomMiddle) {
+                setPlaceholderIndex(hoverIndex + 1);
             }
+        }
     };
 
+    const handleDragLeave = (index: number) => {
+        // if (draggedIndex === null) return;
+        // // Only update placeholder if it's not already set to the dragged element
+        // if (index !== draggedIndex) {
+        //     setPlaceholderIndex(index);
+        // }
+    };
     return (
         <div ref={containerRef}>
             {items.map((item, index) => (
                 <React.Fragment key={item.id}>
-                    {placeholderIndex !== null ? (
+                    {placeholderIndex !== null && context?.activeContent ? (
                         placeholderIndex == index &&
                         placeholderIndex !== draggedIndex ? (
                             <div
@@ -110,10 +128,12 @@ export default function ContentList({ clue }: ContentListProps) {
                         movePlaceholder={movePlaceholder}
                         onDragStart={handleDragStart}
                         onDragEnd={handleDragEnd}
+                        onDragLeave={handleDragLeave}
+                        // isDragging={draggedIndex === index}
                     ></ContentBlock>
                 </React.Fragment>
             ))}
-            {placeholderIndex ? (
+            {placeholderIndex && context?.activeContent ? (
                 placeholderIndex == items.length &&
                 placeholderIndex !== draggedIndex ? (
                     <div
