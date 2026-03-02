@@ -2,6 +2,7 @@ import { DragContext } from "../context/dragContext";
 import { useContext, useState, useEffect } from "react";
 
 import { useCluesForClue } from "../custom_hooks/useClueSelectors";
+import { useConnectionsForClue } from "../custom_hooks/useConnectionSelector";
 
 import React from "react";
 
@@ -43,9 +44,11 @@ export default function ClueModal() {
     const { pinMedia } = useMedia();
 
     const { clue, renewClue } = useCluesForClue(context!.activeClue ?? "");
+    const {connectionsByClueId} = useConnectionsForClue(context!.activeClue ?? "");
 
     const [title, setTitle] = useState<string | undefined>("");
     const [media, setMedia] = useState<Array<string>>([]);
+    const [activeConnection, setActiveConnection] = useState<string | null>(null);
 
     useEffect(() => {
         if (!clue) return;
@@ -100,18 +103,25 @@ export default function ClueModal() {
                     sx: {
                         display: "flex",
                         flexDirection: "row",
-                        width: "40%",
+                        justifyContent: "space-between",
+                        // width: "80%",
                         height: "100%",
-                        gap: "5%",
                         maxHeight: "none",
+                        maxWidth: "none",
                         margin: "0",
                         padding: "1%",
-                        backgroundColor: "rgb(237, 216, 168)",
+                        backgroundColor: "rgb(237, 216, 168, 0)",
                     },
                 },
             }}
         >
-            <Container
+            {activeConnection ? 
+            <Container sx={{width: "30vw"}}></Container>
+            : null
+            }
+
+            <Container sx={{width: "40vw", display: "flex", gap: "5%",}}>
+                <Container
                 disableGutters
                 sx={{
                     width: "30%",
@@ -133,6 +143,9 @@ export default function ClueModal() {
                             Add content
                         </Button>
                     </DialogActions>
+                    <DialogActions sx={{display: "flex", flexDirection: "column", gap: "10px"}}>
+                        {connectionsByClueId ? connectionsByClueId.map(value => (<Button onClick={() => setActiveConnection((value.startId == clue.id ? value.endId : value.startId) as string)}>{value.startId == clue.id ? value.endId : value.startId}</Button>)) : null}
+                    </DialogActions>
                     {/* <DialogActions>
                         <Button sx={{
                             color: "black",
@@ -146,9 +159,9 @@ export default function ClueModal() {
                 </Paper>
 
                 <DeleteContentBlock></DeleteContentBlock>
-            </Container>
+                </Container>
 
-            <Paper sx={{ flex: "4", padding: "10px", overflowY: "auto" }}>
+                <Paper sx={{ flex: "4", padding: "10px", overflowY: "auto" }}>
                 <TextInput
                     content={title}
                     setContent={setTitle}
@@ -156,7 +169,8 @@ export default function ClueModal() {
                     className="ModalTitle"
                 ></TextInput>
                 <ContentList clue={clue ? clue : undefined}></ContentList>
-            </Paper>
+                </Paper>
+            </Container>
         </Dialog>
     );
 }

@@ -45,3 +45,15 @@ export function useConnectionsForCase(caseId: string) {
 
     return { connectionsByCaseId };
 }
+
+export function useConnectionsForClue(clueId: string){
+    const allConnections = useAppSelector((state) =>
+        ConnectionSelector.selectAll(state),
+    );
+
+    const connectionsByClueId = allConnections.filter((c) =>
+  (c.startId === clueId) || (c.endId === clueId)
+);
+
+    return {connectionsByClueId};
+}
