@@ -10,7 +10,6 @@ type ContentBlockProps = {
     movePlaceholder: (hoverIndex: number, clientY: number) => void;
     onDragStart: (index: number, id: string) => void;
     onDragEnd: () => void;
-    onDragLeave: (index: number) => void;
     isDragging?: boolean;
 
     // children?: React.ReactNode;
@@ -24,8 +23,6 @@ export default function ContentBlock({
     movePlaceholder,
     onDragStart,
     onDragEnd,
-    onDragLeave,
-    isDragging,
 
     // children,
 }: ContentBlockProps) {
@@ -38,14 +35,13 @@ export default function ContentBlock({
                 e.preventDefault();
                 movePlaceholder(index, e.clientY);
             }}
-            onDragLeave={() => onDragLeave(index)}
+            // onDragLeave={() => onDragLeave(index)}
             style={{
                 padding: "12px",
                 border: "1px solid #aaa",
                 background: "white",
                 marginBottom: "6px",
                 cursor: "grab",
-                // opacity: isDragging ? 0.5 : 1,
             }}
         >
 

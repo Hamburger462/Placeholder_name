@@ -1,7 +1,10 @@
 import { DragContext } from "../context/dragContext";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, act } from "react";
 
-import { useCluesForClue } from "../custom_hooks/useClueSelectors";
+import {
+    useCluesForClue,
+    useCluesForCase,
+} from "../custom_hooks/useClueSelectors";
 import { useConnectionsForClue } from "../custom_hooks/useConnectionSelector";
 
 import React from "react";
@@ -43,12 +46,27 @@ export default function ClueModal() {
 
     const { pinMedia } = useMedia();
 
-    const { clue, renewClue } = useCluesForClue(context!.activeClue ?? "");
-    const {connectionsByClueId} = useConnectionsForClue(context!.activeClue ?? "");
+    const { clue, renewClue: renewActiveClue } = useCluesForClue(
+        context!.activeClue ?? "",
+    );
+    const { clueByClueIdInCase, renewClue } = useCluesForCase(
+        clue ? clue.caseId : "",
+    );
+
+    const { connectionsByClueId } = useConnectionsForClue(
+        context!.activeClue ?? "",
+    );
 
     const [title, setTitle] = useState<string | undefined>("");
     const [media, setMedia] = useState<Array<string>>([]);
-    const [activeConnection, setActiveConnection] = useState<string | null>(null);
+
+    const [activeConnection, setActiveConnection] = useState<string | null>(
+        null,
+    );
+    const [connectedTitle, setConnectedTitle] = useState<string | undefined>(
+        "",
+    );
+    const [connectedMedia, setConnectedMedia] = useState<Array<string>>([]);
 
     useEffect(() => {
         if (!clue) return;
@@ -57,12 +75,30 @@ export default function ClueModal() {
         setMedia(clue.mediaIds ? clue.mediaIds : []);
     }, [context.activeClue]);
 
+    useEffect(() => {
+        if (!activeConnection) return;
+
+        const connectedClue = clueByClueIdInCase(activeConnection);
+        setConnectedTitle(connectedClue?.title);
+        setConnectedMedia(
+            connectedClue?.mediaIds ? connectedClue.mediaIds : [],
+        );
+    }, [activeConnection]);
+
     const saveClueChanges = () => {
-        renewClue({
+        renewActiveClue({
             title: title,
         });
 
+        if (activeConnection) {
+            renewClue({
+                id: activeConnection,
+                changes: { title: connectedTitle },
+            });
+        }
+
         context.setActiveClue(null);
+        setActiveConnection(null);
     };
 
     const addMediaItem = () => {
@@ -80,7 +116,15 @@ export default function ClueModal() {
 
         setMedia(updatedMedia);
 
-        renewClue({ mediaIds: updatedMedia });
+        renewActiveClue({ mediaIds: updatedMedia });
+    };
+
+    const changeActiveConnection = (id: string) => {
+        if (activeConnection == id) {
+            setActiveConnection(null);
+        } else {
+            setActiveConnection(id);
+        }
     };
 
     return (
@@ -102,12 +146,14 @@ export default function ClueModal() {
                 paper: {
                     sx: {
                         display: "flex",
+                        gap: "24px",
                         flexDirection: "row",
                         justifyContent: "space-between",
                         // width: "80%",
                         height: "100%",
                         maxHeight: "none",
                         maxWidth: "none",
+                        minWidth: "70%",
                         margin: "0",
                         padding: "1%",
                         backgroundColor: "rgb(237, 216, 168, 0)",
@@ -115,16 +161,35 @@ export default function ClueModal() {
                 },
             }}
         >
-            {activeConnection ? 
-            <Container sx={{width: "30vw"}}></Container>
-            : null
-            }
+            <Paper
+                sx={{
+                    flexGrow: activeConnection ? 3 : 0,
+                    flexBasis: 0,
+                    transition: "flex-grow 300ms ease",
+                    overflow: "hidden",
+                    overflowY: activeConnection ? "auto" : "hidden",
+                    padding: activeConnection ? "10px" : "0",
+                }}
+            >
+                <TextInput
+                    content={connectedTitle}
+                    setContent={setConnectedTitle}
+                    name="Title"
+                    className="ModalTitle"
+                ></TextInput>
+                <ContentList
+                    clue={
+                        activeConnection
+                            ? clueByClueIdInCase(activeConnection)
+                            : undefined
+                    }
+                ></ContentList>
+            </Paper>
 
-            <Container sx={{width: "40vw", display: "flex", gap: "5%",}}>
-                <Container
+            <Container
                 disableGutters
                 sx={{
-                    width: "30%",
+                    flex: "1",
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "space-between",
@@ -143,9 +208,6 @@ export default function ClueModal() {
                             Add content
                         </Button>
                     </DialogActions>
-                    <DialogActions sx={{display: "flex", flexDirection: "column", gap: "10px"}}>
-                        {connectionsByClueId ? connectionsByClueId.map(value => (<Button onClick={() => setActiveConnection((value.startId == clue.id ? value.endId : value.startId) as string)}>{value.startId == clue.id ? value.endId : value.startId}</Button>)) : null}
-                    </DialogActions>
                     {/* <DialogActions>
                         <Button sx={{
                             color: "black",
@@ -158,10 +220,42 @@ export default function ClueModal() {
                     </DialogActions> */}
                 </Paper>
 
-                <DeleteContentBlock></DeleteContentBlock>
-                </Container>
+                <Paper>
+                    <DialogTitle>Connections</DialogTitle>
+                    <DialogActions
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "10px",
+                        }}
+                    >
+                        {connectionsByClueId
+                            ? connectionsByClueId.map((value) => {
+                                  const targetId = (
+                                      value.startId == clue.id
+                                          ? value.endId
+                                          : value.startId
+                                  ) as string;
 
-                <Paper sx={{ flex: "4", padding: "10px", overflowY: "auto" }}>
+                                  return (
+                                      <Button
+                                          key={targetId}
+                                          onClick={() =>
+                                              changeActiveConnection(targetId)
+                                          }
+                                      >
+                                          {clueByClueIdInCase(targetId)?.title}
+                                      </Button>
+                                  );
+                              })
+                            : null}
+                    </DialogActions>
+                </Paper>
+
+                <DeleteContentBlock></DeleteContentBlock>
+            </Container>
+
+            <Paper sx={{ flex: "3", padding: "10px", overflowY: "auto" }}>
                 <TextInput
                     content={title}
                     setContent={setTitle}
@@ -169,8 +263,7 @@ export default function ClueModal() {
                     className="ModalTitle"
                 ></TextInput>
                 <ContentList clue={clue ? clue : undefined}></ContentList>
-                </Paper>
-            </Container>
+            </Paper>
         </Dialog>
     );
 }

@@ -30,7 +30,7 @@ export function useCluesForCase(caseId: string) {
         selectCluesByCaseId(state, caseId),
     );
 
-    const clueByClueIdInCase = (clueId?: string) =>
+    const clueByClueIdInCase = (clueId?: string | null) =>
         cluesByCaseId.find((value) => value.id == clueId);
 
     const pinClue = (data: Clue) => dispatch(addClue(data));

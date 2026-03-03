@@ -54,7 +54,10 @@ export interface DragState {
     setActiveClue: (state: string | null) => void;
 
     activeContent: string | null;
-    setActiveContent: (state: string | null) => void;
+    setActiveContent: (state: string | null, copy?: boolean) => void;
+
+    copyMode: boolean;
+    setCopyMode: (state: boolean) => void;
 };
 
 export const DragContext = createContext<DragState | null>(null);

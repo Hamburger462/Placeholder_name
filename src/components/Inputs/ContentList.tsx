@@ -30,8 +30,6 @@ export default function ContentList({ clue }: ContentListProps) {
 
     const containerRef = useRef<HTMLDivElement>(null);
 
-    // useEffect(() => {console.log(context?.activeContent)}, [context?.activeContent])
-
     const handleDragStart = (index: number, id: string) => {
         setDraggedIndex(index);
         if (!clue?.mediaIds) return;
@@ -82,7 +80,6 @@ export default function ContentList({ clue }: ContentListProps) {
         const upperMiddle = hoverRect.top + hoverRect.height / 3;
 
         if (draggedIndex - hoverIndex >= 1) {
-            console.log("Going up")
             if (clientY < upperMiddle) {
                 setPlaceholderIndex(hoverIndex);
                 return;
@@ -90,7 +87,6 @@ export default function ContentList({ clue }: ContentListProps) {
         }
 
         if (draggedIndex - hoverIndex <= 0) {
-            console.log("Going down")
             if (clientY > bottomMiddle) {
                 setPlaceholderIndex(hoverIndex + 1);
             }
@@ -128,7 +124,7 @@ export default function ContentList({ clue }: ContentListProps) {
                         movePlaceholder={movePlaceholder}
                         onDragStart={handleDragStart}
                         onDragEnd={handleDragEnd}
-                        onDragLeave={handleDragLeave}
+                        // onDragLeave={handleDragLeave}
                         // isDragging={draggedIndex === index}
                     ></ContentBlock>
                 </React.Fragment>

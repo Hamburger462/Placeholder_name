@@ -220,6 +220,8 @@ export function DragProvider({ children, parentRef }: DragProvider) {
 
     const [activeContent, setActiveContent] = useState<string | null>(null);
 
+    const [copyMode, setCopyMode] = useState<boolean>(false);
+
     const contextValue: DragState = {
         activeDrag,
         setActiveDrag,
@@ -241,6 +243,9 @@ export function DragProvider({ children, parentRef }: DragProvider) {
 
         activeContent,
         setActiveContent,
+        
+        copyMode,
+        setCopyMode
     };
 
     return (
