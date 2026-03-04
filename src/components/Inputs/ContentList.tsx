@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo, useContext, useEffect } from "react";
+import React, { useState, useRef, useMemo, useContext } from "react";
 import { DragContext } from "../../context/dragContext";
 
 import type { Clue } from "../../types/clues";
@@ -42,19 +42,19 @@ export default function ContentList({ clue }: ContentListProps) {
             placeholderIndex !== null &&
             draggedIndex !== placeholderIndex
         ) {
-            const updated = [...(clue?.mediaIds as Array<string>)];
-            if (placeholderIndex < clue!.mediaIds!.length) {
-                const placeholder = updated[placeholderIndex];
-                updated[placeholderIndex] = updated[draggedIndex];
-                updated[draggedIndex] = placeholder;
-            } else {
-                const placeholder = updated[placeholderIndex - 1];
-                updated[placeholderIndex - 1] = updated[draggedIndex];
-                updated[draggedIndex] = placeholder;
-            }
+            const updated = [...(clue?.mediaIds ?? [])];
+
+            const [movedItem] = updated.splice(draggedIndex, 1);
+
+            const insertIndex =
+                draggedIndex < placeholderIndex
+                    ? placeholderIndex - 1
+                    : placeholderIndex;
+
+            updated.splice(insertIndex, 0, movedItem);
+
             renewClue({ mediaIds: updated });
         }
-
         setDraggedIndex(null);
         setPlaceholderIndex(null);
         context?.setActiveContent(null);
@@ -93,13 +93,6 @@ export default function ContentList({ clue }: ContentListProps) {
         }
     };
 
-    const handleDragLeave = (index: number) => {
-        // if (draggedIndex === null) return;
-        // // Only update placeholder if it's not already set to the dragged element
-        // if (index !== draggedIndex) {
-        //     setPlaceholderIndex(index);
-        // }
-    };
     return (
         <div ref={containerRef}>
             {items.map((item, index) => (

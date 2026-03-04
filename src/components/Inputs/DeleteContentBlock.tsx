@@ -5,10 +5,6 @@ import { useMedia } from "../../custom_hooks/useMediaSelectors";
 
 import { Container } from "@mui/material";
 
-type DeleteContentProps = {
-
-}
-
 export default function DeleteContentBlock(){
     const context = useContext(DragContext);
 
