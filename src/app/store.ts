@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+
 import CluesReducer from "../features/clue/cluesSlice"
 import ConnectionsReducer from "../features/connection/connectionSlice"
 import CasesReducer  from "../features/case/casesSlice";

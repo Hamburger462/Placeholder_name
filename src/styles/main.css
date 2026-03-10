@@ -1,0 +1,9 @@
+#root{
+    width: 70%;
+    margin: auto;
+}
+
+.HeaderNav{
+    display: flex;
+    gap: 12px;
+}

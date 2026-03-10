@@ -20,6 +20,7 @@ export default function Archive() {
     }
     return (
         <>
+            <h1>This is archive</h1>
             <form>
                 <label>
                     <input

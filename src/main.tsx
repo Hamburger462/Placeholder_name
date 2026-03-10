@@ -9,12 +9,17 @@ import { Provider } from "react-redux";
 
 import { CssBaseline } from "@mui/material";
 
+import { AuthContextProvider } from "./context/authContext.tsx";
+
+import "./styles/main.css";
 
 createRoot(document.getElementById("root")!).render(
     <Provider store={store}>
         <BrowserRouter>
             <CssBaseline />
-            <App />
+            <AuthContextProvider>
+                <App />
+            </AuthContextProvider>
         </BrowserRouter>
     </Provider>,
 );
