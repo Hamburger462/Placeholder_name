@@ -22,6 +22,7 @@ export default function Profile() {
                     signoutUser();
                     navigate("/");
                 }}
+                variant="contained"
             >
                 Sign out
             </Button>

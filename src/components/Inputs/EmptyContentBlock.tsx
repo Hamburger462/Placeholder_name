@@ -27,7 +27,10 @@ export default function EmptyContentBlock({ id }: EmptyContentProps) {
     };
 
     return (
-        <div>
+        <div style={{
+            display: "flex",
+            justifyContent: "space-around"
+        }}>
             <Button onClick={() => setMediaType("text")}>Text</Button>
             <Button onClick={() => setMediaType("image")}>Image</Button>
             <Button onClick={() => setMediaType("video")}>Video</Button>

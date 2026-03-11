@@ -1,9 +1,20 @@
-#root{
-    width: 70%;
+#root {
+    width: 80%;
     margin: auto;
 }
 
-.HeaderNav{
+.HeaderNav {
     display: flex;
     gap: 12px;
+}
+
+.CaseContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 14px;
+}
+
+.CaseContainer > * {
+    width: 30%;
 }

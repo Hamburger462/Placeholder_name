@@ -24,7 +24,7 @@ function App() {
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
                 context?.setAuthInfo(null);
-                console.log("No signed in user present");
+                console.log("No signed-in user present");
 
                 return;
             }

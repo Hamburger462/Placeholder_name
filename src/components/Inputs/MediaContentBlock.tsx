@@ -30,7 +30,11 @@ export default function MediaContentBlock({ id }: MediaContentProps) {
     };
 
     return (
-        <div>
+        <div style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center"
+        }}>
             {mediaForMedia.type == "image" && <div>This is an image</div>}
             {mediaForMedia.type == "video" && <div>This is a video</div>}
             {mediaForMedia.type == "audio" && <div>This is an audio</div>}

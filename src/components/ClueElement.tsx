@@ -170,8 +170,8 @@ export default function ClueItem({ clue_data, drag_data }: ClueItemProps) {
                     className="ConnectionDrop"
                     onMouseDown={checkConnection}
                 ></Droppable>
-                <div style={{display:"flex", justifyContent:"space-between"}}>
-                    Title: {clue.title}
+                <div style={{display:"flex", justifyContent:"space-between", alignItems: "center", fontSize: "18px"}}>
+                    {clue.title}
                     <Button variant="contained" onClick={editClue}>Edit</Button>
                 </div>
             </Draggable>

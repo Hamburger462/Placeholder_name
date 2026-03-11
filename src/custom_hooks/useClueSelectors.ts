@@ -19,7 +19,27 @@ export const makeSelectCluesByCaseId = () =>
     createSelector(
         [CluesSelector.selectAll, (_: RootState, caseId: string) => caseId],
         (clues, caseId) => clues.filter((clue) => clue.caseId === caseId),
-);
+    );
+
+export function useClues() {
+    const dispatch = useAppDispatch();
+
+    const allClues = useAppSelector((state) => CluesSelector.selectAll(state));
+
+    const pinClue = (data: Clue) => dispatch(addClue(data));
+
+    const unpinClue = (id: string) => dispatch(removeClue(id));
+
+    const renewClue = (update: Update<Clue, string>) =>
+        dispatch(updateClue(update));
+
+    return {
+        allClues,
+        pinClue,
+        unpinClue,
+        renewClue,
+    };
+}
 
 export function useCluesForCase(caseId: string) {
     const dispatch = useAppDispatch();

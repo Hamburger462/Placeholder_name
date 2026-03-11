@@ -12,12 +12,19 @@ import type {
 import { useConnections } from "../custom_hooks/useConnectionSelector";
 import { type Connection } from "../types/clues";
 
+import { useContext } from "react";
+import { authContext } from "./authContext";
+
+import { db } from "../database/firebase";
+import { doc, setDoc } from "firebase/firestore";
 interface DragProvider {
     children: React.ReactNode;
     parentRef: RefObject<HTMLDivElement | null>;
 }
 
 export function DragProvider({ children, parentRef }: DragProvider) {
+    const context = useContext(authContext);
+
     const [activeDrag, setActiveDrag] = useState<ActiveElem>(null);
 
     const connectionStateRef = useRef<ConnectionState | null>(null);
@@ -131,7 +138,7 @@ export function DragProvider({ children, parentRef }: DragProvider) {
         });
     };
 
-    const endConnection = (
+    const endConnection = async (
         targetId?: string,
         point?: { x: number; y: number },
         caseId?: string,
@@ -174,6 +181,27 @@ export function DragProvider({ children, parentRef }: DragProvider) {
                 };
 
                 pinConnection(connectionRef.current);
+
+                if (!context?.authInfo) return;
+
+                await setDoc(
+                    doc(
+                        db,
+                        "Cases",
+                        context.activeCase,
+                        "Connections",
+                        connectionRef.current!.id,
+                    ),
+                    {
+                        startId: connectionRef.current.startId,
+                        endId: targetId,
+                        pos1: {
+                            x: connectionRef.current.pos1?.x,
+                            y: connectionRef.current.pos1?.y,
+                        },
+                        pos2: point,
+                    },
+                );
             }
         }
 
@@ -181,7 +209,6 @@ export function DragProvider({ children, parentRef }: DragProvider) {
         connectionRef.current = null;
         console.log("Connection ended");
     };
-
 
     const [droppables, setDroppables] = useState<Droppable>(new Map());
 
@@ -205,7 +232,6 @@ export function DragProvider({ children, parentRef }: DragProvider) {
         });
     };
 
-
     const [dragOrder, setDrag] = useState<Array<string | null>>([]);
 
     const setDragOrder = (id: string) => {
@@ -214,7 +240,6 @@ export function DragProvider({ children, parentRef }: DragProvider) {
             return [...filtered, id];
         });
     };
-
 
     const [activeClue, setActiveClue] = useState<string | null>(null);
 
@@ -243,9 +268,9 @@ export function DragProvider({ children, parentRef }: DragProvider) {
 
         activeContent,
         setActiveContent,
-        
+
         copyMode,
-        setCopyMode
+        setCopyMode,
     };
 
     return (

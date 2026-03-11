@@ -19,6 +19,7 @@ import {
     Container,
     Button,
 } from "@mui/material";
+import Box from "@mui/material/Box";
 import { type TransitionProps } from "@mui/material/transitions";
 
 import { type MediaItem } from "../types/clues";
@@ -156,125 +157,119 @@ export default function ClueModal() {
                         minWidth: "70%",
                         margin: "0",
                         padding: "1%",
-                        backgroundColor: "rgb(237, 216, 168, 0)",
+                        backgroundColor: "rgb(237, 216, 168, 1)",
                     },
                 },
             }}
         >
-            {/* <DialogContent> */}
-                <Paper
-                    sx={{
-                        flexGrow: activeConnection ? 3 : 0,
-                        flexBasis: 0,
-                        transition: "flex-grow 300ms ease",
-                        overflow: "hidden",
-                        overflowY: activeConnection ? "auto" : "hidden",
-                        padding: activeConnection ? "10px" : "0",
-                    }}
-                >
-                    <TextInput
-                        content={connectedTitle}
-                        setContent={setConnectedTitle}
-                        name="Title"
-                        className="ModalTitle"
-                    ></TextInput>
-                    <ContentList
-                        clue={
-                            activeConnection
-                                ? clueByClueIdInCase(activeConnection)
-                                : undefined
-                        }
-                    ></ContentList>
-                </Paper>
-            {/* </DialogContent> */}
+            <Paper
+                sx={{
+                    flexGrow: activeConnection ? 3 : 0,
+                    flexBasis: 0,
+                    transition: "flex-grow 300ms ease",
+                    overflow: "hidden",
+                    overflowY: activeConnection ? "auto" : "hidden",
+                    padding: activeConnection ? "10px" : "0",
+                }}
+            >
+                <TextInput
+                    content={connectedTitle}
+                    setContent={setConnectedTitle}
+                    name="Title"
+                    className="ModalTitle"
+                ></TextInput>
+                <ContentList
+                    clue={
+                        activeConnection
+                            ? clueByClueIdInCase(activeConnection)
+                            : undefined
+                    }
+                ></ContentList>
+            </Paper>
 
-            {/* <DialogContent> */}
-                <Container
-                    disableGutters
-                    sx={{
-                        flex: "1",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "space-between",
-                    }}
-                >
-                    <Paper>
-                        <DialogActions>
-                            <Button
-                                sx={{
-                                    color: "black",
-                                    fontWeight: 600,
-                                    width: "100%",
-                                }}
-                                onClick={addMediaItem}
-                            >
-                                Add content
-                            </Button>
-                        </DialogActions>
-                        {/* <DialogActions>
-                        <Button sx={{
-                            color: "black",
-                            fontWeight: 500,
-                            width: "100%",
-                        }} onClick={saveClueChanges}>Save changes</Button>
-                        <Button onClick={() => context.setActiveClue(null)}>
-                            Close
+            <Container
+                disableGutters
+                sx={{
+                    flex: "1",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "24px",
+                }}
+            >
+                <Paper>
+                    <DialogActions>
+                        <Button
+                            sx={{
+                                color: "black",
+                                fontWeight: 600,
+                                width: "100%",
+                            }}
+                            onClick={addMediaItem}
+                        >
+                            Add content
                         </Button>
-                    </DialogActions> */}
-                    </Paper>
+                    </DialogActions>
+                </Paper>
 
+                <Paper>
+                    <DeleteContentBlock></DeleteContentBlock>
+                </Paper>
+
+                {connectionsByClueId.length > 0 ? (
                     <Paper>
                         <DialogTitle>Connections</DialogTitle>
                         <DialogActions
+                            disableSpacing
                             sx={{
                                 display: "flex",
                                 flexDirection: "column",
                                 gap: "10px",
                             }}
                         >
-                            {connectionsByClueId
-                                ? connectionsByClueId.map((value) => {
-                                      const targetId = (
-                                          value.startId == clue.id
-                                              ? value.endId
-                                              : value.startId
-                                      ) as string;
+                            {connectionsByClueId.map((value) => {
+                                const targetId = (
+                                    value.startId == clue.id
+                                        ? value.endId
+                                        : value.startId
+                                ) as string;
 
-                                      return (
-                                          <Button
-                                              key={targetId}
-                                              onClick={() =>
-                                                  changeActiveConnection(
-                                                      targetId,
-                                                  )
-                                              }
-                                          >
-                                              {
-                                                  clueByClueIdInCase(targetId)
-                                                      ?.title
-                                              }
-                                          </Button>
-                                      );
-                                  })
-                                : null}
+                                return (
+                                    <Box
+                                        key={targetId}
+                                        sx={{
+                                            width: "100%",
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            alignItems: "center",
+                                            fontSize: "18px"
+                                        }}
+                                    >
+                                        {clueByClueIdInCase(targetId)?.title}
+                                        <Button
+                                            onClick={() =>
+                                                changeActiveConnection(targetId)
+                                            }
+                                            variant="contained"
+                                        >
+                                            Edit
+                                        </Button>
+                                    </Box>
+                                );
+                            })}
                         </DialogActions>
                     </Paper>
+                ) : null}
+            </Container>
 
-                    <DeleteContentBlock></DeleteContentBlock>
-                </Container>
-            {/* </DialogContent> */}
-
-            {/* <DialogContent> */}
-                <Paper sx={{ flex: "3", padding: "10px", overflowY: "auto" }}>
-                    <TextInput
-                        content={title}
-                        setContent={setTitle}
-                        name="Title"
-                        className="ModalTitle"
-                    ></TextInput>
-                    <ContentList clue={clue ? clue : undefined}></ContentList>
-                </Paper>
-            {/* </DialogContent> */}
+            <Paper sx={{ flex: "3", padding: "10px", overflowY: "auto" }}>
+                <TextInput
+                    content={title}
+                    setContent={setTitle}
+                    name="Title"
+                    className="ModalTitle"
+                ></TextInput>
+                <ContentList clue={clue ? clue : undefined}></ContentList>
+            </Paper>
         </Dialog>
     );
 }

@@ -13,7 +13,6 @@ export function useMedia() {
     const allMedia = useAppSelector((state) => MediaSelector.selectAll(state));
     const allMediaEntities = useAppSelector((state) => MediaSelector.selectEntities(state));
 
-
     const pinMedia = (data: MediaItem) => dispatch(addMedia(data));
     const unpinMedia = (id: string) => dispatch(removeMedia(id));
     const renewMedia = (update: Update<MediaItem, string>) =>

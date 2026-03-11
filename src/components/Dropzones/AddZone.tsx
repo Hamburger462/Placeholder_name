@@ -12,6 +12,10 @@ import { useCases } from "../../custom_hooks/useCasesSelectors";
 import { type onDragEndPos } from "../Draggable";
 
 import { DragContext } from "../../context/dragContext";
+import { authContext } from "../../context/authContext";
+
+import { db } from "../../database/firebase";
+import { setDoc, doc } from "firebase/firestore";
 
 interface AddZoneProps {
     parentRef: RefObject<HTMLDivElement | null>;
@@ -23,9 +27,11 @@ export default function AddZone({ parentRef, caseId }: AddZoneProps) {
     const { allCases, renewCase } = useCases();
 
     const context = useContext(DragContext);
+    const userContext = useContext(authContext);
+
     const caseItem = allCases.find((value) => value.id == caseId);
 
-    const handleDragEnd = (
+    const handleDragEnd = async (
         dragPos: onDragEndPos,
         droppedId?: string | null,
     ) => {
@@ -51,6 +57,17 @@ export default function AddZone({ parentRef, caseId }: AddZoneProps) {
         }})
 
         context?.setActiveClue(newClue.id);
+
+        if(!userContext?.activeCase) return;
+
+        await setDoc(doc(db, "Cases", userContext?.activeCase, "Clues", newClue.id), {
+            title: newClue.title,
+            position: {
+                x: dragPos.x,
+                y: dragPos.y
+            },
+            mediaIds: [],
+        })
     };
 
     return (

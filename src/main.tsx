@@ -9,6 +9,8 @@ import { Provider } from "react-redux";
 
 import { CssBaseline } from "@mui/material";
 
+import { SubscribeFirestore } from "./database/firestore.ts";
+
 import { AuthContextProvider } from "./context/authContext.tsx";
 
 import "./styles/main.css";
@@ -18,6 +20,7 @@ createRoot(document.getElementById("root")!).render(
         <BrowserRouter>
             <CssBaseline />
             <AuthContextProvider>
+                <SubscribeFirestore />
                 <App />
             </AuthContextProvider>
         </BrowserRouter>
