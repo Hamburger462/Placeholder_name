@@ -1,5 +1,9 @@
 import { DragContext } from "../context/dragContext";
+import { authContext } from "../context/authContext";
 import { useContext, useState, useEffect } from "react";
+
+import { db } from "../database/firebase";
+import { doc, setDoc } from "firebase/firestore";
 
 import {
     useCluesForClue,
@@ -28,10 +32,6 @@ import { useMedia } from "../custom_hooks/useMediaSelectors";
 import ContentList from "./Inputs/ContentList";
 import TextInput from "./Inputs/TextInput";
 import DeleteContentBlock from "./Inputs/DeleteContentBlock";
-
-// type ClueModalProps = {
-//     children?: React.ReactNode;
-// };
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & { children: React.ReactElement },
@@ -102,7 +102,9 @@ export default function ClueModal() {
         setActiveConnection(null);
     };
 
-    const addMediaItem = () => {
+    const userContext = useContext(authContext);
+
+    const addMediaItem = async () => {
         if (!clue) return;
 
         const newMedia: MediaItem = {
@@ -118,6 +120,15 @@ export default function ClueModal() {
         setMedia(updatedMedia);
 
         renewActiveClue({ mediaIds: updatedMedia });
+
+        if(!userContext?.activeCase) return;
+
+        if(!context.activeClue) return;
+
+        await setDoc(doc(db, "Cases", userContext.activeCase, "Clues", context.activeClue, "Media", newMedia.id), {
+            type: newMedia.type,
+            order: updatedMedia.length - 1
+        });
     };
 
     const changeActiveConnection = (id: string) => {
@@ -241,7 +252,7 @@ export default function ClueModal() {
                                             display: "flex",
                                             justifyContent: "space-between",
                                             alignItems: "center",
-                                            fontSize: "18px"
+                                            fontSize: "18px",
                                         }}
                                     >
                                         {clueByClueIdInCase(targetId)?.title}

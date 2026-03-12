@@ -1,5 +1,6 @@
 import React, { useState, useRef, useMemo, useContext } from "react";
 import { DragContext } from "../../context/dragContext";
+import { authContext } from "../../context/authContext";
 
 import type { Clue } from "../../types/clues";
 import { useCluesForClue } from "../../custom_hooks/useClueSelectors";
@@ -7,12 +8,16 @@ import { useCluesForClue } from "../../custom_hooks/useClueSelectors";
 import { useMedia } from "../../custom_hooks/useMediaSelectors";
 import ContentBlock from "./ContentBlock";
 
+import { db } from "../../database/firebase";
+import { doc, updateDoc } from "firebase/firestore";
+
 type ContentListProps = {
     clue?: Clue;
 };
 
 export default function ContentList({ clue }: ContentListProps) {
     const context = useContext(DragContext);
+    const userContext = useContext(authContext);
 
     const { allMediaEntities } = useMedia();
 
@@ -36,7 +41,7 @@ export default function ContentList({ clue }: ContentListProps) {
         context?.setActiveContent(id);
     };
 
-    const handleDragEnd = () => {
+    const handleDragEnd = async () => {
         if (
             draggedIndex !== null &&
             placeholderIndex !== null &&
@@ -54,6 +59,14 @@ export default function ContentList({ clue }: ContentListProps) {
             updated.splice(insertIndex, 0, movedItem);
 
             renewClue({ mediaIds: updated });
+
+            if(!userContext?.activeCase) return;
+
+            if(!context?.activeClue) return;
+
+            await updateDoc(doc(db, "Cases", userContext.activeCase, "Clues", context.activeClue), {
+                mediaIds: updated
+            });
         }
         setDraggedIndex(null);
         setPlaceholderIndex(null);

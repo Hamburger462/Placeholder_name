@@ -9,6 +9,7 @@ import type { DraggableProps } from "./Draggable";
 
 import React, { useContext, useRef } from "react";
 import { DragContext } from "../context/dragContext";
+import { authContext } from "../context/authContext";
 
 import { type onDragEndPos } from "./Draggable";
 
@@ -18,6 +19,17 @@ import {
 } from "../custom_hooks/useConnectionSelector";
 
 import { Button } from "@mui/material";
+
+import { db } from "../database/firebase";
+import {
+    collection,
+    doc,
+    updateDoc,
+    deleteDoc,
+    query,
+    where,
+    getDocs,
+} from "firebase/firestore";
 
 export interface ClueProps {
     clueId: string;
@@ -33,15 +45,18 @@ export default function ClueItem({ clue_data, drag_data }: ClueItemProps) {
     const { unpinClue } = useCluesForCase(clue.caseId);
 
     const context = useContext(DragContext);
+    const userContext = useContext(authContext);
 
     const { connectionsByCaseId } = useConnectionsForCase(clue.caseId);
 
     const { unpinConnection, renewConnection } = useConnections();
 
-    const HandleClueDrop = (
+    const HandleClueDrop = async (
         dragPos: onDragEndPos,
         droppedId?: string | null,
     ) => {
+        if (!userContext?.activeCase) return;
+
         const dropId = droppedId?.split("-")[0];
 
         if (dropId == "DEATHZONE") {
@@ -51,6 +66,40 @@ export default function ClueItem({ clue_data, drag_data }: ClueItemProps) {
                     unpinConnection(value.id);
                 }
             });
+
+            const col = collection(
+                db,
+                "Cases",
+                userContext.activeCase,
+                "Connections",
+            );
+
+            await deleteDoc(
+                doc(db, "Cases", userContext.activeCase, "Clues", clue.id),
+            );
+
+            // check startId first
+            const startQuery = query(col, where("startId", "==", clue.id));
+            const startSnap = await getDocs(startQuery);
+
+            if (!startSnap.empty) {
+                const connection = startSnap.docs[0];
+                await deleteDoc(
+                    doc(db, "Cases", userContext.activeCase, "Connections", connection.id),
+                );
+                return;
+            }
+
+            // otherwise check endId
+            const endQuery = query(col, where("endId", "==", clue.id));
+            const endSnap = await getDocs(endQuery);
+
+            if (!endSnap.empty) {
+                const connection = endSnap.docs[0];
+                await deleteDoc(
+                    doc(db, "Cases", userContext.activeCase, "Connections", connection.id),
+                );
+            }
         } else if (dropId === "ADDZONE" || !dropId) {
             // Snap back
             dragPos.setPos({ x: dragPos.startX, y: dragPos.startY });
@@ -76,6 +125,16 @@ export default function ClueItem({ clue_data, drag_data }: ClueItemProps) {
                 }
             });
         }
+
+        await updateDoc(
+            doc(db, "Cases", userContext.activeCase, "Clues", clue.id),
+            {
+                position: {
+                    x: dragPos.x,
+                    y: dragPos.y,
+                },
+            },
+        );
     };
 
     const connectionRef = useRef<HTMLDivElement | null>(null);
@@ -150,7 +209,7 @@ export default function ClueItem({ clue_data, drag_data }: ClueItemProps) {
         e.preventDefault();
 
         context?.setActiveClue(clue.id);
-    }
+    };
 
     return (
         <>
@@ -170,9 +229,18 @@ export default function ClueItem({ clue_data, drag_data }: ClueItemProps) {
                     className="ConnectionDrop"
                     onMouseDown={checkConnection}
                 ></Droppable>
-                <div style={{display:"flex", justifyContent:"space-between", alignItems: "center", fontSize: "18px"}}>
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        fontSize: "18px",
+                    }}
+                >
                     {clue.title}
-                    <Button variant="contained" onClick={editClue}>Edit</Button>
+                    <Button variant="contained" onClick={editClue}>
+                        Edit
+                    </Button>
                 </div>
             </Draggable>
         </>

@@ -66,7 +66,6 @@ export default function AddZone({ parentRef, caseId }: AddZoneProps) {
                 x: dragPos.x,
                 y: dragPos.y
             },
-            mediaIds: [],
         })
     };
 

@@ -67,6 +67,10 @@ export async function loadConnections(
     });
 }
 
+export async function loadMedias(){
+    
+}
+
 export function SubscribeFirestore() {
     const context = useContext(authContext);
 
