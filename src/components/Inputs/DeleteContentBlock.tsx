@@ -6,6 +6,7 @@ import { db } from "../../database/firebase";
 import { doc, deleteDoc } from "firebase/firestore";
 
 import { useMedia } from "../../custom_hooks/useMediaSelectors";
+import { useCluesForClue } from "../../custom_hooks/useClueSelectors";
 
 import { Container } from "@mui/material";
 
@@ -14,16 +15,40 @@ export default function DeleteContentBlock() {
     const userContext = useContext(authContext);
 
     const { unpinMedia } = useMedia();
+    const { clue, renewClue } = useCluesForClue(context?.activeClue ?? "");
 
-    const handleContentDelete = async (event: React.DragEvent<HTMLDivElement>) => {
+    const handleContentDelete = async (
+        event: React.DragEvent<HTMLDivElement>,
+    ) => {
         event.preventDefault();
 
         if (!context?.activeContent) return;
+
         unpinMedia(context.activeContent);
 
-        if(!userContext?.activeCase) return;
+        if (!userContext?.activeCase) return;
 
-        await deleteDoc(doc(db, "Cases", userContext.activeCase, "Clues", context.activeClue as string, "Media", context.activeContent));
+        const updatedMediaIds = (clue.mediaIds ?? []).filter(
+            (id) => id !== context.activeContent,
+        );
+
+        renewClue({
+            mediaIds: updatedMediaIds,
+        });
+
+        if(!context.activeClue) return;
+
+        await deleteDoc(
+            doc(
+                db,
+                "Cases",
+                userContext.activeCase,
+                "Clues",
+                context.activeClue,
+                "Media",
+                context.activeContent,
+            ),
+        );
 
         context.setActiveContent(null);
     };
