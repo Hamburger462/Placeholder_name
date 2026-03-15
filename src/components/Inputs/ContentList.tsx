@@ -9,7 +9,7 @@ import { useMedia } from "../../custom_hooks/useMediaSelectors";
 import ContentBlock from "./ContentBlock";
 
 import { db } from "../../database/firebase";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, writeBatch } from "firebase/firestore";
 
 type ContentListProps = {
     clue?: Clue;
@@ -60,17 +60,31 @@ export default function ContentList({ clue }: ContentListProps) {
 
             renewClue({ mediaIds: updated });
 
-            if(!userContext?.activeCase) return;
+            if (!userContext?.activeCase) return;
+            if (!context?.activeClue) return;
 
-            if(!context?.activeClue) return;
+            const batch = writeBatch(db);
 
-            await updateDoc(doc(db, "Cases", userContext.activeCase, "Clues", context.activeClue), {
-                mediaIds: updated
+            updated.forEach((mediaId, index) => {
+                const mediaRef = doc(
+                    db,
+                    "Cases",
+                    userContext.activeCase,
+                    "Clues",
+                    context.activeClue as string,
+                    "Media",
+                    mediaId,
+                );
+
+                batch.update(mediaRef, { order: index });
             });
+
+            setDraggedIndex(null);
+            setPlaceholderIndex(null);
+            context?.setActiveContent(null);
+
+            await batch.commit();
         }
-        setDraggedIndex(null);
-        setPlaceholderIndex(null);
-        context?.setActiveContent(null);
     };
 
     const movePlaceholder = (hoverIndex: number, clientY: number) => {
