@@ -1,9 +1,14 @@
 import Quill, { Delta, type EmitterSource } from "quill";
 import "quill/dist/quill.snow.css";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useContext } from "react";
+import { DragContext } from "../../context/dragContext";
+import { authContext } from "../../context/authContext";
 
 import { useMediaForMedia } from "../../custom_hooks/useMediaSelectors";
+
+import { db } from "../../database/firebase";
+import { doc, updateDoc } from "firebase/firestore";
 
 type TextContentBlockProps = {
     id: string;
@@ -14,67 +19,89 @@ export default function TextContentBlock({
     id,
     isSingleLine,
 }: TextContentBlockProps) {
+    const context = useContext(DragContext);
+    const userContext = useContext(authContext);
+
     const inputRef = useRef<HTMLDivElement>(null);
-    const quillRef = useRef<Quill>(null);
+    const quillRef = useRef<Quill | null>(null);
 
-    const {mediaForMedia, renewMedia} = useMediaForMedia(id);
+    const { mediaForMedia, renewMedia } = useMediaForMedia(id);
 
+    const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    // Initialize Quill
     useEffect(() => {
         if (!inputRef.current) return;
 
         const quill = new Quill(inputRef.current, {
             theme: "snow",
             modules: {
-                // toolbar: [
-                //     [{ header: [1, 2, false] }],
-                //     ["bold", "italic", "underline"],
-                //     ["link"],
-                //     ["clean"],
-                // ],
-                toolbar: false,
+                toolbar: [
+                    [{ header: [false, 1, 2, 3, 4, 5, 6] }],
+                    ["bold", "italic", "underline"],
+                    ["link"],
+                    ["clean"],
+                ],
             },
         });
 
         quillRef.current = quill;
 
+        // Handle text changes
         const handler = (_: Delta, _1: Delta, source: EmitterSource) => {
             if (source !== "user") return;
 
-            const text = quill.getText();
-            renewMedia({text: text});
+            const delta = quill.getContents(); // get Delta object
+
+            // Update local state
+            renewMedia({ text: delta.ops });
+
+            if (!context?.activeClue || !userContext?.activeCase) return;
+
+            // Debounce Firestore updates
+            if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+
+            saveTimerRef.current = setTimeout(async () => {
+                await updateDoc(
+                    doc(
+                        db,
+                        "Cases",
+                        userContext.activeCase,
+                        "Clues",
+                        context.activeClue as string,
+                        "Media",
+                        id,
+                    ),
+                    { text: { ...delta } },
+                );
+            }, 500);
         };
 
         quill.on("text-change", handler);
 
+        // Single-line mode (optional)
         if (isSingleLine) {
-            quill.keyboard.addBinding({ key: 13 }, () =>
-                console.log("New line"),
-            );
+            quill.keyboard.addBinding({ key: 13 }, () => true); // prevent Enter
         }
 
         return () => {
             quill.off("text-change", handler);
+            if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
         };
     }, []);
 
-    if(mediaForMedia.type != "text") return null;
+    if (mediaForMedia.type !== "text") return null;
 
+    // Restore Delta from media
     useEffect(() => {
         const quill = quillRef.current;
         if (!quill) return;
 
-        const current = quill.getText();
-
-        // Only update if different
-        if (mediaForMedia.text !== current) {
-            quill.setText(mediaForMedia.text || "Text is here");
+        // Only set contents if editor is empty
+        if (quill.getLength() <= 1 && mediaForMedia.text) {
+            quill.setContents(mediaForMedia.text);
         }
     }, [mediaForMedia]);
 
-
-    return (
-        <>
-            <div ref={inputRef} style={{ minHeight: 200 }} />
-        </>
-    );
+    return <div ref={inputRef} style={{ minHeight: 200 }} />;
 }

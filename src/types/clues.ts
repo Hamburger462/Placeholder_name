@@ -1,3 +1,5 @@
+import { Op  } from "quill";
+
 export type MediaItem =
     | {
           id: string;
@@ -8,7 +10,7 @@ export type MediaItem =
           id: string;
           clueId: string;
           type: "text";
-          text: string;
+          text: Op[];
       }
     | {
           id: string;

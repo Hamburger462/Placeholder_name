@@ -35,15 +35,17 @@ export default function MediaContentBlock({ id }: MediaContentProps) {
     const acceptValue = acceptMap[mediaForMedia.type] ?? "";
 
     useEffect(() => {
-        async function setUrl(){
-            if (!context?.activeClue) return;
-            if (!userContext?.activeCase) return;
+        // async function setUrl(){
+        //     if (!context?.activeClue) return;
+        //     if (!userContext?.activeCase) return;
 
-            const docRef = await getDoc(doc(db, "Cases", userContext?.activeCase, "Clues", context?.activeClue, "Media", mediaForMedia.id));
-            setPreviewUrl((docRef.data()!.url) as string);
-        }
+        //     const docRef = await getDoc(doc(db, "Cases", userContext?.activeCase, "Clues", context?.activeClue, "Media", mediaForMedia.id));
+        //     setPreviewUrl((docRef.data()!.url) as string);
+        // }
 
-        setUrl();
+        // setUrl();
+        if(mediaForMedia.type == "text") return;
+        setPreviewUrl(mediaForMedia.url)
     }, [context?.activeClue])
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {

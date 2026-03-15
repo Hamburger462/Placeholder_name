@@ -104,11 +104,25 @@ export async function loadMedias(
     snapshot.forEach((doc) => {
         const data = doc.data();
 
-        pinMedia({
+        const mediaItem = {
             id: doc.id,
             clueId,
             type: data.type,
-        });
+        };
+
+        // Set text or url based on type
+        if (data.type === "text") {
+            mediaItem.text = data.text; // assuming text stored under "text"
+        } else if (
+            data.type === "image" ||
+            data.type === "video" ||
+            data.type === "audio"
+        ) {
+            mediaItem.url = data.url; // assuming media url stored under "url"
+            // if (data.name) mediaItem.name = data.name; // optional
+        }
+
+        pinMedia(mediaItem);
     });
 }
 
