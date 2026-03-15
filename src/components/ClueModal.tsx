@@ -73,8 +73,8 @@ export default function ClueModal() {
         if (!clue) return;
 
         setTitle(clue.title);
-        setMedia(clue.mediaIds ?? []);
-    }, [clue]);
+        setMedia(clue.mediaIds ? clue.mediaIds : []);
+    }, [context.activeClue]);
 
     useEffect(() => {
         if (!activeConnection) return;
@@ -116,8 +116,6 @@ export default function ClueModal() {
         pinMedia(newMedia);
 
         const updatedMedia = [...(media ?? []), newMedia.id];
-
-        console.log(updatedMedia)
 
         setMedia(updatedMedia);
 

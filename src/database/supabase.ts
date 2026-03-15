@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { project_url, api_key } from "./supabase_secret";
 // Create Supabase client
-export const supabase = createClient(project_url, api_key);
+const supabase = createClient(project_url, api_key);
 // Upload file using standard upload
 export async function uploadFile(file: File, filePath: string) {
     const { error } = await supabase.storage

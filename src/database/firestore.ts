@@ -1,18 +1,12 @@
 import { db } from "./firebase";
-import { getDocs, query, where, collection, orderBy } from "firebase/firestore";
+import { getDocs, query, where, collection } from "firebase/firestore";
 
 import { useEffect, useContext } from "react";
 
 import { useCases } from "../custom_hooks/useCasesSelectors";
 import { useClues } from "../custom_hooks/useClueSelectors";
 import { useConnections } from "../custom_hooks/useConnectionSelector";
-import { useMedia } from "../custom_hooks/useMediaSelectors";
-import {
-    type Case,
-    type Clue,
-    type Connection,
-    type MediaItem,
-} from "../types/clues";
+import { type Case, type Clue, type Connection } from "../types/clues";
 
 import { authContext } from "../context/authContext";
 
@@ -35,40 +29,21 @@ export async function loadCases(pinCase: (data: Case) => void, userId: string) {
 }
 
 export async function loadClues(pinClue: (data: Clue) => void, caseId: string) {
-    const cluesSnapshot = await getDocs(
-        collection(db, "Cases", caseId, "Clues"),
-    );
+    const snapshot = await getDocs(collection(db, "Cases", caseId, "Clues"));
 
-    const clueIds: string[] = [];
-
-    for (const clueDoc of cluesSnapshot.docs) {
-        const clueData = clueDoc.data();
-        const clueId = clueDoc.id;
-
-        clueIds.push(clueId);
-
-        const mediaSnapshot = await getDocs(
-            query(
-                collection(db, "Cases", caseId, "Clues", clueId, "Media"),
-                orderBy("order"),
-            ),
-        );
-
-        const mediaIds = mediaSnapshot.docs.map((mediaDoc) => mediaDoc.id);
-
+    snapshot.forEach((doc) => {
+        const docData = doc.data();
         pinClue({
-            id: clueId,
+            id: doc.id,
             caseId,
-            title: clueData.title,
+            title: docData.title,
             position: {
-                x: clueData.position.x,
-                y: clueData.position.y,
+                x: docData.position.x,
+                y: docData.position.y,
             },
-            mediaIds,
+            mediaIds: docData.mediaIds,
         });
-    }
-
-    return clueIds;
+    });
 }
 
 export async function loadConnections(
@@ -92,24 +67,8 @@ export async function loadConnections(
     });
 }
 
-export async function loadMedias(
-    pinMedia: (data: MediaItem) => void,
-    caseId: string,
-    clueId: string,
-) {
-    const snapshot = await getDocs(
-        collection(db, "Cases", caseId, "Clues", clueId, "Media"),
-    );
-
-    snapshot.forEach((doc) => {
-        const data = doc.data();
-
-        pinMedia({
-            id: doc.id,
-            clueId,
-            type: data.type,
-        });
-    });
+export async function loadMedias(){
+    
 }
 
 export function SubscribeFirestore() {
@@ -118,8 +77,6 @@ export function SubscribeFirestore() {
     const { pinCase } = useCases();
     const { pinClue } = useClues();
     const { pinConnection } = useConnections();
-    const { pinMedia } = useMedia();
-
     useEffect(() => {
         async function load() {
             if (!context?.authInfo) return;
@@ -127,12 +84,7 @@ export function SubscribeFirestore() {
             const caseIds = await loadCases(pinCase, context.authInfo.id);
 
             for (const caseId of caseIds) {
-                const clueIds = await loadClues(pinClue, caseId);
-
-                for (const clueId of clueIds) {
-                    await loadMedias(pinMedia, caseId, clueId);
-                }
-
+                await loadClues(pinClue, caseId);
                 await loadConnections(pinConnection, caseId);
             }
         }

@@ -85,13 +85,7 @@ export default function ClueItem({ clue_data, drag_data }: ClueItemProps) {
             if (!startSnap.empty) {
                 const connection = startSnap.docs[0];
                 await deleteDoc(
-                    doc(
-                        db,
-                        "Cases",
-                        userContext.activeCase,
-                        "Connections",
-                        connection.id,
-                    ),
+                    doc(db, "Cases", userContext.activeCase, "Connections", connection.id),
                 );
                 return;
             }
@@ -103,13 +97,7 @@ export default function ClueItem({ clue_data, drag_data }: ClueItemProps) {
             if (!endSnap.empty) {
                 const connection = endSnap.docs[0];
                 await deleteDoc(
-                    doc(
-                        db,
-                        "Cases",
-                        userContext.activeCase,
-                        "Connections",
-                        connection.id,
-                    ),
+                    doc(db, "Cases", userContext.activeCase, "Connections", connection.id),
                 );
             }
         } else if (dropId === "ADDZONE" || !dropId) {
@@ -136,17 +124,17 @@ export default function ClueItem({ clue_data, drag_data }: ClueItemProps) {
                     });
                 }
             });
-
-            await updateDoc(
-                doc(db, "Cases", userContext.activeCase, "Clues", clue.id),
-                {
-                    position: {
-                        x: dragPos.x,
-                        y: dragPos.y,
-                    },
-                },
-            );
         }
+
+        await updateDoc(
+            doc(db, "Cases", userContext.activeCase, "Clues", clue.id),
+            {
+                position: {
+                    x: dragPos.x,
+                    y: dragPos.y,
+                },
+            },
+        );
     };
 
     const connectionRef = useRef<HTMLDivElement | null>(null);
@@ -163,8 +151,10 @@ export default function ClueItem({ clue_data, drag_data }: ClueItemProps) {
             y: rect.top - containerRect.top + rect.height / 2,
         };
 
+        // 1️⃣ Update clue position in state
         changePos(dragPos.x, dragPos.y);
 
+        // 2️⃣ Update all related connections
         connectionsByCaseId.forEach((conn) => {
             if (conn.startId === clue.id) {
                 renewConnection({
@@ -248,16 +238,7 @@ export default function ClueItem({ clue_data, drag_data }: ClueItemProps) {
                     }}
                 >
                     {clue.title}
-                    <Button
-                        variant="contained"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            editClue(e);
-                        }}
-                        onMouseDown={(e) => {
-                            e.stopPropagation();
-                        }}
-                    >
+                    <Button variant="contained" onClick={editClue}>
                         Edit
                     </Button>
                 </div>

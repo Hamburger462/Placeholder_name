@@ -30,7 +30,7 @@ export async function createUser(user: {
 }
 
 export async function signUser(user: { email: string; password: string }) {
-    await signInWithEmailAndPassword(auth, user.email, user.password)
+    signInWithEmailAndPassword(auth, user.email, user.password)
         .then((userCredential) => {
             const currentUser = userCredential.user;
             console.log(currentUser);
