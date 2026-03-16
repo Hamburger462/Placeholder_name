@@ -1,6 +1,5 @@
 import { useState, useEffect, useContext } from "react";
 
-import { DragContext } from "../../context/dragContext";
 import { authContext } from "../../context/authContext";
 
 import { Button } from "@mui/material";
@@ -8,16 +7,16 @@ import { Button } from "@mui/material";
 import { useMediaForMedia } from "../../custom_hooks/useMediaSelectors";
 
 import { db } from "../../database/firebase";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 
 import { uploadFile } from "../../database/supabase";
 
 type MediaContentProps = {
     id: string;
+    clueId: string;
 };
 
-export default function MediaContentBlock({ id }: MediaContentProps) {
-    const context = useContext(DragContext);
+export default function MediaContentBlock({ id, clueId }: MediaContentProps) {
     const userContext = useContext(authContext);
 
     const { mediaForMedia } = useMediaForMedia(id);
@@ -44,9 +43,9 @@ export default function MediaContentBlock({ id }: MediaContentProps) {
         // }
 
         // setUrl();
-        if(mediaForMedia.type == "text") return;
+        if(mediaForMedia.type == "image" || mediaForMedia.type == "video" || mediaForMedia.type == "audio")
         setPreviewUrl(mediaForMedia.url)
-    }, [context?.activeClue])
+    }, [clueId])
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files?.[0]; // single file only
@@ -74,7 +73,6 @@ export default function MediaContentBlock({ id }: MediaContentProps) {
             const publicUrl = await uploadFile(selectedFile, filePath);
             console.log("Uploaded to Supabase:", publicUrl);
 
-            if (!context?.activeClue) return;
             if (!userContext?.activeCase) return;
 
             await updateDoc(
@@ -83,7 +81,7 @@ export default function MediaContentBlock({ id }: MediaContentProps) {
                     "Cases",
                     userContext.activeCase,
                     "Clues",
-                    context.activeClue,
+                    clueId,
                     "Media",
                     mediaForMedia.id,
                 ),

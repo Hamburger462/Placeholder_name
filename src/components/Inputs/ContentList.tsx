@@ -139,6 +139,7 @@ export default function ContentList({ clue }: ContentListProps) {
 
                     <ContentBlock
                         id={item.id}
+                        clueId={clue ? clue.id : ""}
                         type={item.type}
                         index={index}
                         movePlaceholder={movePlaceholder}

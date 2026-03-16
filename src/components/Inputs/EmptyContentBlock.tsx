@@ -1,7 +1,6 @@
 import { useMediaForMedia } from "../../custom_hooks/useMediaSelectors";
 
 import { useContext } from "react";
-import { DragContext } from "../../context/dragContext";
 import { authContext } from "../../context/authContext";
 
 import { db } from "../../database/firebase";
@@ -11,10 +10,10 @@ import { Button } from "@mui/material";
 
 type EmptyContentProps = {
     id: string;
+    clueId: string;
 };
 
-export default function EmptyContentBlock({ id }: EmptyContentProps) {
-    const context = useContext(DragContext);
+export default function EmptyContentBlock({ id, clueId }: EmptyContentProps) {
     const userContext = useContext(authContext);
 
     const { renewMedia } = useMediaForMedia(id);
@@ -22,7 +21,7 @@ export default function EmptyContentBlock({ id }: EmptyContentProps) {
     const setMediaType = async (type: string) => {
         switch (type) {
             case "text":
-                renewMedia({ type: type, text: "" });
+                renewMedia({ type: type });
                 break;
             case "image":
                 renewMedia({ type: type, url: "" });
@@ -36,9 +35,8 @@ export default function EmptyContentBlock({ id }: EmptyContentProps) {
         }
 
         if(!userContext?.activeCase) return;
-        if(!context?.activeClue) return;
 
-        await updateDoc(doc(db, "Cases", userContext?.activeCase, "Clues", context?.activeClue, "Media", id), {
+        await updateDoc(doc(db, "Cases", userContext?.activeCase, "Clues", clueId, "Media", id), {
             type: type
         });
     };

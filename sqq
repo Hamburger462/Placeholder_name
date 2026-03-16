@@ -1,0 +1,201 @@
+[33mcommit 3e42482f99e69646fd4df8044ba6f5e80af33715[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Hamburger462 <nurmuxanbet.anuar462@gmail.com>
+Date:   Sun Mar 15 20:16:43 2026 +0500
+
+    Started working syncing redux with firestore
+
+[33mcommit c26edba934b482e8fb9522b069284eefae2e34fb[m
+Author: Hamburger462 <nurmuxanbet.anuar462@gmail.com>
+Date:   Sun Mar 15 19:09:56 2026 +0500
+
+    Reapply "Added supabase storage and its working properly"
+    
+    This reverts commit 34b8ac84084bca5bbacee6a29e6c3fc1c04584a1.
+
+[33mcommit 34b8ac84084bca5bbacee6a29e6c3fc1c04584a1[m
+Author: Hamburger462 <nurmuxanbet.anuar462@gmail.com>
+Date:   Sun Mar 15 19:07:16 2026 +0500
+
+    Revert "Added supabase storage and its working properly"
+    
+    This reverts commit 2bdf9d78f565513feeaaaa080035fd46e58cfdad.
+
+[33mcommit 2bdf9d78f565513feeaaaa080035fd46e58cfdad[m
+Author: Hamburger462 <nurmuxanbet.anuar462@gmail.com>
+Date:   Sun Mar 15 02:57:29 2026 +0500
+
+    Added supabase storage and its working properly
+
+[33mcommit c96e54e49c594207b949ee85fbf87a9afb5504d3[m
+Author: Hamburger462 <nurmuxanbet.anuar462@gmail.com>
+Date:   Fri Mar 13 01:25:12 2026 +0500
+
+    Added media sync with firebase
+
+[33mcommit 3cbe949bb114cde183b8019d0bec9f8da4afe47c[m
+Author: Hamburger462 <nurmuxanbet.anuar462@gmail.com>
+Date:   Thu Mar 12 01:18:02 2026 +0500
+
+    Added syncronyzing with firebase for the cases, clues and connections
+
+[33mcommit b68ae6fe92b9c10c330c85fb60ebb2fa26b780d2[m
+Author: Hamburger462 <nurmuxanbet.anuar462@gmail.com>
+Date:   Wed Mar 11 00:02:51 2026 +0500
+
+    Added basic authentication
+
+[33mcommit acbd278a4e96cd61e114a8712d25efc2c57e6e4d[m
+Author: Hamburger462 <nurmuxanbet.anuar462@gmail.com>
+Date:   Thu Mar 5 02:00:13 2026 +0500
+
+    Done basic routing
+
+[33mcommit 6eac4f3f82bfb8c2694e4c21b583f55899b82900[m
+Author: Hamburger462 <nurmuxanbet.anuar462@gmail.com>
+Date:   Tue Mar 3 22:49:21 2026 +0500
+
+    Added second modal to show connected clue data
+
+[33mcommit 9f00f2961c6e76437da072f5a7e6cfde9ee021fa[m
+Author: Hamburger548 <nurmuxanbet.anuar462@gmail.com>
+Date:   Mon Mar 2 14:58:42 2026 +0500
+
+    Added clue selection via connection
+
+[33mcommit b5d82ec82bcc188d0aa4c754eefd16ef2ccb5903[m
+Author: Hamburger462 <nurmuxanbet.anuar462@gmail.com>
+Date:   Mon Mar 2 00:54:40 2026 +0500
+
+    Fixed drag and drop for content, need to work on second modal window and to make content draggable betweeen each other
+
+[33mcommit 48aafbe7d0186b4be8a3ae21ceefce758978d75b[m
+Author: Hamburger462 <nurmuxanbet.anuar462@gmail.com>
+Date:   Sat Feb 28 18:00:23 2026 +0500
+
+    Completed drag and drop for content, started to work on editing content
+
+[33mcommit 7b5da63c2d2a4eaaa4f5db0ba972a56cc10b0915[m
+Author: Hamburger462 <nurmuxanbet.anuar462@gmail.com>
+Date:   Sat Feb 28 00:30:30 2026 +0500
+
+    Completed drag and drop system for content
+
+[33mcommit 3e5462325d7c2ccf7fa09bce0b8fccabf32e938f[m
+Author: Hamburger462 <nurmuxanbet.anuar462@gmail.com>
+Date:   Thu Feb 26 00:06:23 2026 +0500
+
+    Started working on media editing
+
+[33mcommit 0d91c87afcedcad060b1ab5fa8c86b2a2ea0333f[m
+Author: Hamburger548 <nurmuxanbet.anuar462@gmail.com>
+Date:   Mon Feb 23 15:50:40 2026 +0500
+
+    Fixed title display
+
+[33mcommit 6776fe309f2d19fd44c62893105d1cbe3051c54b[m
+Author: Hamburger462 <nurmuxanbet.anuar462@gmail.com>
+Date:   Mon Feb 23 07:02:28 2026 +0500
+
+    Added modal window
+
+[33mcommit e7aca019839a09f3516aa0875c346d92ff3db8af[m
+Author: Hamburger548 <nurmuxanbet.anuar462@gmail.com>
+Date:   Thu Feb 19 16:07:49 2026 +0500
+
+    Setting active clue
+
+[33mcommit 261c6a2e6d4b844418a1a56226b947e89f328c60[m
+Author: Hamburger462 <nurmuxanbet.anuar462@gmail.com>
+Date:   Thu Feb 19 02:06:45 2026 +0500
+
+    Added modal window, added going back when entering add zone, fixed connections key problem
+
+[33mcommit ff03beff3be209f3f701154f471aaba199edbe9d[m
+Author: Hamburger462 <nurmuxanbet.anuar462@gmail.com>
+Date:   Mon Feb 16 01:15:36 2026 +0500
+
+    Modal window started
+
+[33mcommit d2e59ef4404f383172c91174ac50aa0a5c50c219[m
+Author: Hamburger548 <nurmuxanbet.anuar462@gmail.com>
+Date:   Fri Feb 13 15:41:02 2026 +0500
+
+    Drag order start
+
+[33mcommit b12c726420fd44341f8fa279381219e92b6597b7[m
+Author: Hamburger462 <nurmuxanbet.anuar462@gmail.com>
+Date:   Wed Feb 11 04:48:51 2026 +0500
+
+    Fixed connecting
+
+[33mcommit f73a5c5c9c58d2f261ca103ea240d21965df2b08[m
+Author: Hamburger548 <nurmuxanbet.anuar462@gmail.com>
+Date:   Tue Feb 10 15:12:32 2026 +0500
+
+    Added connection render and re-render
+
+[33mcommit ef0802a9751b201da053580eee90b8dc4977418b[m
+Author: Hamburger462 <nurmuxanbet.anuar462@gmail.com>
+Date:   Tue Feb 10 00:43:58 2026 +0500
+
+    Started with connection rendering
+
+[33mcommit 107f6ad3156606060d9cd6656f525cc7469df02f[m
+Author: Hamburger548 <nurmuxanbet.anuar462@gmail.com>
+Date:   Mon Feb 9 18:31:34 2026 +0500
+
+    Fixed drop zones
+
+[33mcommit 746ded162f82a8d143455d3aa8e4d855be5f19fb[m
+Author: Hamburger462 <nurmuxanbet.anuar462@gmail.com>
+Date:   Mon Feb 9 02:04:07 2026 +0500
+
+    Added delete and add drag
+
+[33mcommit 8dd923c4f83e859f9dafb85370cd741158264e5c[m
+Author: Hamburger462 <nurmuxanbet.anuar462@gmail.com>
+Date:   Sat Feb 7 01:01:13 2026 +0500
+
+    Added collisions
+
+[33mcommit a1fe3d4e230248c3254ac93f476a454b17f7043e[m
+Author: Hamburger548 <nurmuxanbet.anuar462@gmail.com>
+Date:   Thu Feb 5 14:10:13 2026 +0500
+
+    Added borders to the draggable container
+
+[33mcommit bc492422bff9cb616465faf04561490b0c8530d9[m
+Author: Hamburger462 <nurmuxanbet.anuar462@gmail.com>
+Date:   Wed Feb 4 11:07:34 2026 +0500
+
+    Adding cases function
+
+[33mcommit ea46db7e7ed7e8f6a5b296f1d1b0466dbb5c4ee4[m
+Author: Hamburger548 <nurmuxanbet.anuar462@gmail.com>
+Date:   Tue Feb 3 15:55:55 2026 +0500
+
+    Clues hook added
+
+[33mcommit 67247289959532b07a39089f6eed47d2c568fb0b[m
+Author: Hamburger462 <nurmuxanbet.anuar462@gmail.com>
+Date:   Tue Feb 3 10:21:07 2026 +0500
+
+    Making elements
+
+[33mcommit f2dac04dd35c2e1562d2c99f90841d2c21567b90[m
+Author: Hamburger462 <nurmuxanbet.anuar462@gmail.com>
+Date:   Mon Feb 2 15:36:59 2026 +0500
+
+    Added clues
+
+[33mcommit e41e1029ef451f916ac8f300590362a08497251a[m
+Author: Hamburger462 <nurmuxanbet.anuar462@gmail.com>
+Date:   Mon Feb 2 02:36:42 2026 +0500
+
+    Types complete
+
+[33mcommit fa4b41545c936ebb249172fc414cd087ae121ba2[m
+Author: Hamburger462 <nurmuxanbet.anuar462@gmail.com>
+Date:   Sun Feb 1 17:01:51 2026 +0500
+
+    First commit

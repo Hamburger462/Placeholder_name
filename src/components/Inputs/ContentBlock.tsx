@@ -6,6 +6,7 @@ type ContentBlockProps = {
     id: string;
     type: string;
     index: number;
+    clueId: string;
 
     movePlaceholder: (hoverIndex: number, clientY: number) => void;
     onDragStart: (index: number, id: string) => void;
@@ -19,6 +20,7 @@ export default function ContentBlock({
     id,
     type,
     index,
+    clueId,
 
     movePlaceholder,
     onDragStart,
@@ -45,12 +47,12 @@ export default function ContentBlock({
             }}
         >
 
-            {type === "" && <EmptyContentBlock id={id} />}
-            {type === "text" && <TextContentBlock id={id} />}
+            {type === "" && <EmptyContentBlock clueId={clueId} id={id} />}
+            {type === "text" && <TextContentBlock clueId={clueId} id={id} />}
             {(type === "image" ||
                 type === "video" ||
                 type === "audio") && (
-                <MediaContentBlock id={id} />
+                <MediaContentBlock clueId={clueId} id={id} />
             )}
         </div>
     );

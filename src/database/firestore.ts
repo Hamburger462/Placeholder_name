@@ -108,17 +108,23 @@ export async function loadMedias(
             id: doc.id,
             clueId,
             type: data.type,
-        };
+        } as MediaItem;
 
         // Set text or url based on type
         if (data.type === "text") {
+            if (mediaItem.type != "text") return;
             mediaItem.text = data.text; // assuming text stored under "text"
         } else if (
             data.type === "image" ||
             data.type === "video" ||
             data.type === "audio"
         ) {
-            mediaItem.url = data.url; // assuming media url stored under "url"
+            if (
+                mediaItem.type == "image" ||
+                mediaItem.type == "video" ||
+                mediaItem.type == "audio"
+            )
+                mediaItem.url = data.url; // assuming media url stored under "url"
             // if (data.name) mediaItem.name = data.name; // optional
         }
 

@@ -2,7 +2,6 @@ import Quill, { Delta, type EmitterSource } from "quill";
 import "quill/dist/quill.snow.css";
 
 import { useRef, useEffect, useContext } from "react";
-import { DragContext } from "../../context/dragContext";
 import { authContext } from "../../context/authContext";
 
 import { useMediaForMedia } from "../../custom_hooks/useMediaSelectors";
@@ -12,14 +11,15 @@ import { doc, updateDoc } from "firebase/firestore";
 
 type TextContentBlockProps = {
     id: string;
+    clueId: string;
     isSingleLine?: boolean;
 };
 
 export default function TextContentBlock({
     id,
+    clueId,
     isSingleLine,
 }: TextContentBlockProps) {
-    const context = useContext(DragContext);
     const userContext = useContext(authContext);
 
     const inputRef = useRef<HTMLDivElement>(null);
@@ -56,7 +56,7 @@ export default function TextContentBlock({
             // Update local state
             renewMedia({ text: delta.ops });
 
-            if (!context?.activeClue || !userContext?.activeCase) return;
+            if (!userContext?.activeCase) return;
 
             // Debounce Firestore updates
             if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
@@ -68,7 +68,7 @@ export default function TextContentBlock({
                         "Cases",
                         userContext.activeCase,
                         "Clues",
-                        context.activeClue as string,
+                        clueId,
                         "Media",
                         id,
                     ),
