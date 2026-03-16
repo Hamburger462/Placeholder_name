@@ -5,6 +5,7 @@ import Main from "./pages/Main";
 import Archive from "./pages/Archive";
 import Authorize, { Login, Register } from "./pages/Authorize";
 import Profile from "./pages/Profile";
+import CasePage from "./pages/CasePage";
 
 // import { subscribeCases } from "./database/firebase";
 
@@ -52,6 +53,7 @@ function App() {
                     <Route path="/auth/register" element={<Register />}></Route>
                 </Route>
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/case/:id" element={<CasePage />}></Route>
             </Route>
         </Routes>
     );

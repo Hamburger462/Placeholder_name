@@ -61,7 +61,7 @@ export default function ContentList({ clue }: ContentListProps) {
             renewClue({ mediaIds: updated });
 
             if (!userContext?.activeCase) return;
-            if (!context?.activeClue) return;
+            if (!clue) return;
 
             const batch = writeBatch(db);
 
@@ -71,7 +71,7 @@ export default function ContentList({ clue }: ContentListProps) {
                     "Cases",
                     userContext.activeCase,
                     "Clues",
-                    context.activeClue as string,
+                    clue.id,
                     "Media",
                     mediaId,
                 );

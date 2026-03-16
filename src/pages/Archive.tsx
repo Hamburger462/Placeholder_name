@@ -1,7 +1,6 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import { useCases } from "../custom_hooks/useCasesSelectors";
 import { type Case } from "../types/clues";
-import Caseboard from "../components/CaseBoard";
 
 import { setDoc, doc } from "firebase/firestore";
 import { db } from "../database/firebase";
@@ -10,20 +9,16 @@ import { authContext } from "../context/authContext";
 
 import Button from "@mui/material/Button";
 
+import { useNavigate } from "react-router-dom";
+
 export default function Archive() {
+    const navigate = useNavigate();
+
     const context = useContext(authContext);
 
     const [caseTitle, useCaseTitle] = useState("");
 
     const { allCases, pinCase } = useCases();
-
-    const [currentCase, setCurrentCase] = useState<Case | undefined>(undefined);
-
-    useEffect(() => {
-        setCurrentCase(
-            allCases.find((value) => value.id == context?.activeCase),
-        );
-    }, [context?.activeCase]);
 
     async function addCase() {
         if (!context?.authInfo) {
@@ -44,6 +39,7 @@ export default function Archive() {
         await setDoc(doc(db, "Cases", `${newCase.id}`), {
             title: caseTitle,
             userId: context?.authInfo?.id,
+            createdAt: Date.now(),
         });
     }
 
@@ -66,7 +62,10 @@ export default function Archive() {
                 {allCases.map((value) => {
                     return (
                         <Button
-                            onClick={() => context?.setActiveCase(value.id)}
+                            onClick={() => {
+                                navigate(`/case/${value.id}`);
+                                context?.setActiveCase(value.id);
+                            }}
                             variant="contained"
                             key={crypto.randomUUID()}
                         >
@@ -75,8 +74,6 @@ export default function Archive() {
                     );
                 })}
             </div>
-
-            {currentCase ? <Caseboard data={currentCase}></Caseboard> : null}
         </>
     );
 }
