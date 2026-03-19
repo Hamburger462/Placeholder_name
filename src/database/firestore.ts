@@ -28,6 +28,7 @@ export async function loadCases(pinCase: (data: Case) => void, userId: string) {
             id: doc.id,
             title: data.title,
             clueIds: [],
+            status: data.status,
         });
     });
 

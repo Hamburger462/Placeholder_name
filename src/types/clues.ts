@@ -45,4 +45,5 @@ export type Case = {
     id: string;
     title: string;
     clueIds?: Array<string>;
+    status: "in-progress" | "complete" | "postponed";
 };

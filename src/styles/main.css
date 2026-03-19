@@ -1,11 +1,41 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+
 #root {
     width: 80%;
     margin: auto;
+    padding-top: 24px;
 }
 
-.HeaderNav {
+header{
     display: flex;
-    gap: 12px;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.header-nav {
+    display: flex;
+    gap: 18px;
+}
+
+.nav-link{
+    background-color: #C2A35D;
+    padding: 8px;
+    border-radius: 16px;
+}
+
+.header-nav > a{
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.header-nav > a > img{
+    height: 32px;
 }
 
 .CaseContainer {

@@ -30,6 +30,7 @@ export default function Archive() {
             id: crypto.randomUUID(),
             title: caseTitle,
             clueIds: [],
+            status: "in-progress",
         };
 
         pinCase(newCase);
@@ -39,6 +40,7 @@ export default function Archive() {
         await setDoc(doc(db, "Cases", `${newCase.id}`), {
             title: caseTitle,
             userId: context?.authInfo?.id,
+            status: "in-progress",
             createdAt: Date.now(),
         });
     }
