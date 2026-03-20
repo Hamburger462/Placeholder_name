@@ -9,11 +9,6 @@ export default function Header() {
     return (
         <header>
             <Link 
-            style={{
-                textDecoration: "none",
-                color: "#121417",
-                fontSize: "32px"
-            }}
             className="header-logo nav-link"
             to="/">
                 <img src=""></img>
@@ -21,10 +16,6 @@ export default function Header() {
             </Link>
             <nav className="header-nav">
                 <Link 
-                    style={{
-                        textDecoration: "none",
-                        color: "#121417",
-                    }}  
                     className="nav-link"
                     to="/archive">
                     <img src="../../archive_active.png"></img>
@@ -34,19 +25,11 @@ export default function Header() {
                 {!context?.authInfo ? (
                     <>
                         <Link 
-                        style={{
-                            textDecoration: "none",
-                            color: "#121417",
-                        }}
                         className="nav-link"
                         to="/auth/login">
                             Login
                         </Link>
                         <Link 
-                        style={{
-                            textDecoration: "none",
-                            color: "#121417",
-                        }}  
                         className="nav-link"
                         to="/auth/register">
                             Register
@@ -54,10 +37,6 @@ export default function Header() {
                     </>
                 ) : (
                     <Link 
-                    style={{
-                        textDecoration: "none",
-                        color: "#121417",
-                    }} 
                     className="nav-link"
                     to="/profile">
                         <img src="../../user_active.png"></img>
