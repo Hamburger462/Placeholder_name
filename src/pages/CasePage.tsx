@@ -1,15 +1,15 @@
-import { useContext, useState, useEffect } from "react"
-import { authContext } from "../context/authContext"
+import { useContext, useState, useEffect } from "react";
+import { authContext } from "../context/authContext";
 
-import Caseboard from "../components/CaseBoard"
-import { type Case } from "../types/clues"
+import Caseboard from "../components/CaseBoard";
+import { type Case } from "../types/clues";
 
-import { useParams, useNavigate } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom";
 
-import { useCases } from "../custom_hooks/useCasesSelectors"
-import { Button } from "@mui/material"
+import { useCases } from "../custom_hooks/useCasesSelectors";
+import { Button } from "@mui/material";
 
-export default function CasePage(){
+export default function CasePage() {
     const userContext = useContext(authContext);
 
     const { allCases } = useCases();
@@ -21,15 +21,25 @@ export default function CasePage(){
     const navigate = useNavigate();
 
     useEffect(() => {
-        setCurrentCase(
-            allCases.find((value) => value.id == id),
-        );
-    }, [userContext?.activeCase])
-    
-    return (<>
-        <h1>This is a case page</h1>
-        <Button onClick={() => navigate("/archive")} variant="contained">Go back</Button>
+        setCurrentCase(allCases.find((value) => value.id == id));
+    }, [userContext?.activeCase]);
 
-        {currentCase ? <Caseboard data={currentCase}></Caseboard> : null}
-    </>)
+    return (
+        <>
+            <div>
+                <Button
+                    onClick={() => navigate("/archive")}
+                    variant="contained"
+                    style={{
+                                backgroundColor: "#C2A35D",
+                                color: "#E6E6E6",
+                            }}
+                >
+                    Go back
+                </Button>
+            </div>
+
+            {currentCase ? <Caseboard data={currentCase}></Caseboard> : null}
+        </>
+    );
 }

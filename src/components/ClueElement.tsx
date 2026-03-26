@@ -238,7 +238,9 @@ export default function ClueItem({ clue_data, drag_data }: ClueItemProps) {
                     id={`ConnectionDrop-${clue.id}`}
                     className="ConnectionDrop"
                     onMouseDown={checkConnection}
-                ></Droppable>
+                >
+                    <img className="DropPin" src="../pin_active.png"></img>
+                </Droppable>
                 <div
                     style={{
                         display: "flex",
@@ -250,6 +252,10 @@ export default function ClueItem({ clue_data, drag_data }: ClueItemProps) {
                     {clue.title}
                     <Button
                         variant="contained"
+                        style={{
+                                backgroundColor: "#C2A35D",
+                                color: "#E6E6E6",
+                            }}
                         onClick={(e) => {
                             e.stopPropagation();
                             editClue(e);

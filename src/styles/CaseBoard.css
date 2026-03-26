@@ -1,14 +1,28 @@
-
 .CaseBoard {
-    border: 2px solid;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.CaseName{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.CaseEdit{
+    display: flex;
+    gap: 12px;
 }
 
 .ClueContainer {
     position: relative;
     border: 2px solid;
-    height: 700px;
+    flex: 1;
+    /* height: 700px; */
     display: flex;
     justify-content: space-between;
+    background-color: #e8e1d3;
 }
 
 .ClueDrop {
@@ -16,6 +30,13 @@
     height: 100px;
     position: absolute;
     border: 2px dotted;
+    background-color: #d6cbb8;
+    color: #5a5146;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+    font-size: 20px;
 }
 
 .AddZoneDrop {
@@ -26,32 +47,38 @@
 .AddZoneClue {
     width: 100%;
     height: 100%;
-    text-align: center;
     border: 2px solid;
     z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+    font-size: 20px;
 }
 
 .DeleteZoneDrop {
     right: 0;
 }
 
-.ClueModal{
+/* .ClueModal{
     position: fixed;
     top: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.288);
-}
+} */
 
-.ModalTitle{
+.ModalTitle {
     width: 100%;
     font-size: 20px;
     text-align: center;
     border: none;
     user-select: none;
     border-bottom: 2px solid;
+    padding: 12px;
+    background-color: #E6E6E6;
 }
 
-.ModalTitle:focus{
+.ModalTitle:focus {
     outline: none;
 }

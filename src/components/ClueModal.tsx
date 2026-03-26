@@ -263,6 +263,10 @@ export default function ClueModal() {
                                                 changeActiveConnection(targetId)
                                             }
                                             variant="contained"
+                                            style={{
+                                backgroundColor: "#C2A35D",
+                                color: "#E6E6E6",
+                            }}
                                         >
                                             Edit
                                         </Button>

@@ -16,7 +16,7 @@ export default function Main(){
 
     return (
     <>
-        <h1>This is main page</h1>
+        <h1>My cases</h1>
         
     </>
     );

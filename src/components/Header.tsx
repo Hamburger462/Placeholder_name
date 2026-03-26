@@ -11,7 +11,7 @@ export default function Header() {
             <Link 
             className="header-logo nav-link"
             to="/">
-                <img src=""></img>
+                {/* <img src=""></img> */}
                 Soliloquy
             </Link>
             <nav className="header-nav">

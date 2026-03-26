@@ -2,7 +2,8 @@
     border: 2px solid;
     width: 200px;
     padding: 10px;
-    background-color: green;
+    background-color: #D6CBB8;
+    color: #5A5146;
 }
 
 .ConnectionElement{
@@ -16,14 +17,19 @@
     top: -30px;
     width: 20%;
     margin: auto;
-    border-radius: 100%;
-    border: none;
     aspect-ratio: 1 / 1;
-    background-color: red;
     border: 2px solid;
+    border-radius: 100%;
 }
 
 .ConnectionDrop:hover{
     transform: scale(1.02);
     cursor: pointer;
+}
+
+.DropPin{
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    width: 150%;
 }

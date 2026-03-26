@@ -7,23 +7,29 @@ body{
     padding: 24px;
     min-height: 100vh;
     display: flex;
-    gap: 12px;
+    gap: 24px;
 }
 
 main{
+    display: flex;
+    flex-direction: column;
     flex: 1;
 }
 
 header{
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
     font-size: 24px;
     font-weight: 600;
-    max-width: 156px;
+    max-width: 200px;
 }
 
 .header-nav {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
     gap: 18px;
 }
 
@@ -40,7 +46,7 @@ header{
 
 .nav-link:hover{
     transform: scale(1.1);
-    color: white;
+    color: #E6E6E6;
 }
 
 .header-nav > a{
@@ -51,6 +57,12 @@ header{
 
 .header-nav > a > img{
     height: 32px;
+}
+
+.header-logo{
+    display: block;
+    font-size: 32px;
+    padding: 8px 16px;
 }
 
 .CaseContainer {
