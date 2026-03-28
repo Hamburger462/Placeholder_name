@@ -117,20 +117,33 @@ export default function ClueModal() {
 
         const updatedMedia = [...(media ?? []), newMedia.id];
 
-        console.log(updatedMedia)
-
         setMedia(updatedMedia);
 
         renewActiveClue({ mediaIds: updatedMedia });
 
-        if(!userContext?.activeCase) return;
+        if (!userContext?.activeCase) return;
 
-        if(!context.activeClue) return;
+        if (!context.activeClue) return;
 
-        await setDoc(doc(db, "Cases", userContext.activeCase, "Clues", context.activeClue, "Media", newMedia.id), {
-            type: newMedia.type,
-            order: updatedMedia.length - 1
-        });
+        try {
+            await setDoc(
+                doc(
+                    db,
+                    "Cases",
+                    userContext.activeCase,
+                    "Clues",
+                    context.activeClue,
+                    "Media",
+                    newMedia.id,
+                ),
+                {
+                    type: newMedia.type,
+                    order: updatedMedia.length - 1,
+                },
+            );
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     const changeActiveConnection = (id: string) => {
@@ -264,9 +277,9 @@ export default function ClueModal() {
                                             }
                                             variant="contained"
                                             style={{
-                                backgroundColor: "#C2A35D",
-                                color: "#E6E6E6",
-                            }}
+                                                backgroundColor: "#C2A35D",
+                                                color: "#E6E6E6",
+                                            }}
                                         >
                                             Edit
                                         </Button>
