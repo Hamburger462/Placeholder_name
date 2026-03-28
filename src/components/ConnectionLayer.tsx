@@ -17,7 +17,7 @@ export default function ConnectionLayer({ caseId }: ConnectionLayerProps) {
         return (
             <g key={conn.id}>
                 <line
-                    stroke="black"
+                    stroke="red"
                     strokeWidth={2}
                     x1={from.x}
                     y1={from.y}

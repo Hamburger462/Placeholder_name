@@ -5,3 +5,7 @@
 <a href="https://www.flaticon.com/free-icons/user" title="user icons">User icons created by Freepik - Flaticon</a>
 
 <a href="https://www.flaticon.com/free-icons/push-pin" title="push pin icons">Push pin icons created by Us and Up - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/postponed" title="postponed icons">Postponed icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/foursquare-check-in" title="foursquare check in icons">Foursquare check in icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/timetable" title="timetable icons">Timetable icons created by Anggara - Flaticon</a>

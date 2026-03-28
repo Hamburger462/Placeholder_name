@@ -255,7 +255,7 @@ export function DragProvider({ children, parentRef }: DragProvider) {
         registerDroppable,
         unregisterDroppable,
 
-        connectionState: connectionStateRef.current,
+        connectionState: connectionStateRef,
         startConnection,
         updateMouse,
         endConnection,

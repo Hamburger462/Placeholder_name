@@ -42,7 +42,7 @@ export interface DragState {
     ) => void;
     unregisterDroppable: (id: string) => void;
 
-    connectionState: ConnectionState | null;
+    connectionState: RefObject<ConnectionState | null>;
     startConnection: (id: string, point: { x: number; y: number }, caseId?: string) => any;
     updateMouse: (e: MouseEvent) => any;
     endConnection: (targetId?: string, point?: {x: number; y: number}, caseId?: string) => any;

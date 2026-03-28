@@ -26,9 +26,7 @@ import {
     doc,
     updateDoc,
     deleteDoc,
-    query,
-    where,
-    getDocs,
+    writeBatch,
 } from "firebase/firestore";
 
 export interface ClueProps {
@@ -60,58 +58,38 @@ export default function ClueItem({ clue_data, drag_data }: ClueItemProps) {
         const dropId = droppedId?.split("-")[0];
 
         if (dropId == "DEATHZONE") {
+            if (!userContext?.activeCase) return;
+
+            const caseId = userContext.activeCase;
+
+            // 1. Remove clue locally
             unpinClue(clue.id);
-            connectionsByCaseId.filter((value) => {
-                if (value.startId == clue.id || value.endId == clue.id) {
-                    unpinConnection(value.id);
-                }
+
+            // 2. Find all related connections from Redux
+            const relatedConnections = connectionsByCaseId.filter(
+                (conn) => conn.startId === clue.id || conn.endId === clue.id,
+            );
+
+            // 3. Remove them locally
+            relatedConnections.forEach((conn) => {
+                unpinConnection(conn.id);
             });
 
-            const col = collection(
-                db,
-                "Cases",
-                userContext.activeCase,
-                "Connections",
-            );
+            // 4. Prepare Firestore batch
+            const batch = writeBatch(db);
 
-            await deleteDoc(
-                doc(db, "Cases", userContext.activeCase, "Clues", clue.id),
-            );
+            // delete clue
+            batch.delete(doc(db, "Cases", caseId, "Clues", clue.id));
 
-            // check startId first
-            const startQuery = query(col, where("startId", "==", clue.id));
-            const startSnap = await getDocs(startQuery);
+            // delete all related connections
+            relatedConnections.forEach((conn) => {
+                batch.delete(doc(db, "Cases", caseId, "Connections", conn.id));
+            });
 
-            if (!startSnap.empty) {
-                const connection = startSnap.docs[0];
-                await deleteDoc(
-                    doc(
-                        db,
-                        "Cases",
-                        userContext.activeCase,
-                        "Connections",
-                        connection.id,
-                    ),
-                );
-                return;
-            }
+            // 5. Commit batch
+            await batch.commit();
 
-            // otherwise check endId
-            const endQuery = query(col, where("endId", "==", clue.id));
-            const endSnap = await getDocs(endQuery);
-
-            if (!endSnap.empty) {
-                const connection = endSnap.docs[0];
-                await deleteDoc(
-                    doc(
-                        db,
-                        "Cases",
-                        userContext.activeCase,
-                        "Connections",
-                        connection.id,
-                    ),
-                );
-            }
+            return;
         } else if (dropId === "ADDZONE" || !dropId) {
             // Snap back
             dragPos.setPos({ x: dragPos.startX, y: dragPos.startY });
@@ -137,15 +115,67 @@ export default function ClueItem({ clue_data, drag_data }: ClueItemProps) {
                 }
             });
 
-            await updateDoc(
-                doc(db, "Cases", userContext.activeCase, "Clues", clue.id),
-                {
-                    position: {
-                        x: dragPos.x,
-                        y: dragPos.y,
-                    },
+            return;
+        }
+
+        try {
+            const caseId = userContext.activeCase;
+
+            // 1. Compute final center point (same logic as during drag)
+            if (!connectionRef.current || !containerRef.current) return;
+
+            const rect = connectionRef.current.getBoundingClientRect();
+            const containerRect = containerRef.current.getBoundingClientRect();
+
+            const point = {
+                x: rect.left - containerRect.left + rect.width / 2,
+                y: rect.top - containerRect.top + rect.height / 2,
+            };
+
+            // 2. Update clue position in Firestore
+            const batch = writeBatch(db);
+
+            batch.update(doc(db, "Cases", caseId, "Clues", clue.id), {
+                position: {
+                    x: dragPos.x,
+                    y: dragPos.y,
                 },
+            });
+
+            // 3. Get all related connections from Redux
+            const relatedConnections = connectionsByCaseId.filter(
+                (conn) => conn.startId === clue.id || conn.endId === clue.id,
             );
+
+            // 4. Update locally + queue Firestore updates
+            relatedConnections.forEach((conn) => {
+                const changes: any = {};
+
+                if (conn.startId === clue.id) {
+                    changes.pos1 = point;
+                }
+
+                if (conn.endId === clue.id) {
+                    changes.pos2 = point;
+                }
+
+                // update Redux immediately (optimistic UI)
+                renewConnection({
+                    id: conn.id,
+                    changes,
+                });
+
+                // queue Firestore update
+                batch.update(
+                    doc(db, "Cases", caseId, "Connections", conn.id),
+                    changes,
+                );
+            });
+
+            // 5. Commit all updates atomically
+            await batch.commit();
+        } catch (error) {
+            console.error(error);
         }
     };
 
@@ -200,10 +230,16 @@ export default function ClueItem({ clue_data, drag_data }: ClueItemProps) {
             y: rect.top - containerRect.top + rect.height / 2,
         };
 
-        if (context?.connectionState?.isActive) {
+        if (context?.connectionState?.current?.isActive) {
             context.endConnection(clue.id, point, clue.caseId);
+
+            // context.connectionState.current = null;
+
+            console.log("3");
         } else {
             context!.startConnection(clue.id, point, clue.caseId);
+
+            console.log("4");
         }
     };
 
@@ -253,9 +289,9 @@ export default function ClueItem({ clue_data, drag_data }: ClueItemProps) {
                     <Button
                         variant="contained"
                         style={{
-                                backgroundColor: "#C2A35D",
-                                color: "#E6E6E6",
-                            }}
+                            backgroundColor: "#C2A35D",
+                            color: "#E6E6E6",
+                        }}
                         onClick={(e) => {
                             e.stopPropagation();
                             editClue(e);

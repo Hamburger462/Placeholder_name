@@ -10,13 +10,14 @@ import { authContext } from "../context/authContext";
 import Button from "@mui/material/Button";
 
 import { useNavigate } from "react-router-dom";
+import TextInput from "../components/Inputs/TextInput";
 
 export default function Archive() {
     const navigate = useNavigate();
 
     const context = useContext(authContext);
 
-    const [caseTitle, useCaseTitle] = useState("");
+    const [caseTitle, setCaseTitle] = useState("Case of ");
 
     const { allCases, pinCase } = useCases();
 
@@ -43,36 +44,52 @@ export default function Archive() {
             status: "in-progress",
             createdAt: Date.now(),
         });
+
+        setCaseTitle("Case of ");
     }
 
     return (
         <>
             <h1>Archive</h1>
-            <form>
-                <label>
-                    <input
-                        type="text"
-                        placeholder="Case #"
-                        value={caseTitle}
-                        onChange={(event) => useCaseTitle(event.target.value)}
-                    />
-                </label>
-            </form>
-            <button onClick={addCase}>Add case</button>
 
             <div className="CaseContainer">
+                <form className="CaseLink" style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "12px"
+                }}>
+                    <TextInput content={caseTitle} setContent={setCaseTitle} name="NewCaseTitle" className="CaseForm"></TextInput>
+                    <Button variant="contained" onClick={addCase} style={{backgroundColor: "#d6cbb8", color: "#121417"}}>Add to the archive</Button>
+                </form>
+
                 {allCases.map((value) => {
                     return (
-                        <Button
+                        <div
+                            key={value.id}
                             onClick={() => {
                                 navigate(`/case/${value.id}`);
                                 context?.setActiveCase(value.id);
                             }}
-                            variant="contained"
-                            key={crypto.randomUUID()}
+                            className="CaseLink"
                         >
-                            {value.title}
-                        </Button>
+                            <div className="CaseLinkTitle">{value.title}</div>
+                            <div className="CaseLinkStatus">
+                                Status:{" "}
+                                <span style={{ color: "#5A5146" }}>
+                                    {value.status}
+                                </span>
+                            </div>
+                            <div>Clues: {value.clueIds?.length}</div>
+                        </div>
+                        // <Button
+                        //     onClick={() => {
+                        //         navigate(`/case/${value.id}`);
+                        //         context?.setActiveCase(value.id);
+                        //     }}
+                        //     variant="contained"
+                        // >
+                        //     {value.title}
+                        // </Button>
                     );
                 })}
             </div>
