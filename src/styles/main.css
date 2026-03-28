@@ -1,4 +1,4 @@
-body{
+body {
     margin: 0;
     padding: 0;
 }
@@ -10,13 +10,13 @@ body{
     gap: 24px;
 }
 
-main{
+main {
     display: flex;
     flex-direction: column;
     flex: 1;
 }
 
-header{
+header {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -33,8 +33,8 @@ header{
     gap: 18px;
 }
 
-.nav-link{
-    background-color: #C2A35D;
+.nav-link {
+    background-color: #c2a35d;
     padding: 8px;
     border-radius: 16px;
     transition: 0.2s;
@@ -44,36 +44,36 @@ header{
     justify-content: center;
 }
 
-.nav-link:hover{
+.nav-link:hover {
     transform: scale(1.1);
-    color: #E6E6E6;
+    color: #e6e6e6;
 }
 
-.header-nav > a{
+.header-nav > a {
     display: flex;
     gap: 8px;
     align-items: center;
 }
 
-.header-nav > a > img{
+.header-nav > a > img {
     height: 32px;
 }
 
-.header-logo{
+.header-logo {
     display: block;
     font-size: 32px;
     padding: 8px 16px;
 }
 
-.CaseDisplay{
+.CaseDisplay {
     display: flex;
     justify-content: space-between;
     margin-bottom: 16px;
 }
 
-.CaseDisplay > *{
+.CaseDisplay > * {
     padding: 24px;
-    background-color: #C2A35D;
+    background-color: #c2a35d;
     color: #121417;
     display: flex;
     align-items: center;
@@ -92,28 +92,39 @@ header{
     width: 30%;
 }
 
-.CaseLink{
+.CaseLink {
     cursor: pointer;
-    background-color: #C2A35D;
+    background-color: #c2a35d;
     max-width: 300px;
     padding: 12px;
     color: #121417;
     border-radius: 12px;
 }
 
-.CaseLinkTitle{
+.CaseLinkTitle {
     font-size: 24px;
     font-weight: 600;
 }
 
-.CaseLinkStatus{
+.CaseLinkStatus {
     font-size: 18px;
 }
 
-.CaseForm{
+.CaseForm {
     border: none;
     border-bottom: 2px solid;
     background: none;
     font-size: 18px;
     padding: 4px 8px;
+}
+
+.ProfileMain {
+    display: flex;
+}
+
+.ProfileData {
+    background-color: #c2a35d;
+    padding: 12px;
+    border-radius: 12px;
+    color: #121417;
 }

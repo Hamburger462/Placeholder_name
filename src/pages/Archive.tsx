@@ -81,15 +81,6 @@ export default function Archive() {
                             </div>
                             <div>Clues: {value.clueIds?.length}</div>
                         </div>
-                        // <Button
-                        //     onClick={() => {
-                        //         navigate(`/case/${value.id}`);
-                        //         context?.setActiveCase(value.id);
-                        //     }}
-                        //     variant="contained"
-                        // >
-                        //     {value.title}
-                        // </Button>
                     );
                 })}
             </div>

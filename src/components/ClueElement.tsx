@@ -22,10 +22,10 @@ import { Button } from "@mui/material";
 
 import { db } from "../database/firebase";
 import {
-    collection,
+    // collection,
     doc,
-    updateDoc,
-    deleteDoc,
+    // updateDoc,
+    // deleteDoc,
     writeBatch,
 } from "firebase/firestore";
 

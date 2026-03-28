@@ -14,18 +14,27 @@ export default function Profile() {
 
     return (
         <>
-            <h1>This is profile</h1>
-            <div>Email: {context?.authInfo?.email}</div>
-            <div>Username: {context?.authInfo?.username}</div>
-            <Button
-                onClick={() => {
-                    signoutUser();
-                    navigate("/");
-                }}
-                variant="contained"
-            >
-                Sign out
-            </Button>
+            <h1>Profile</h1>
+            <div className="ProfileMain">
+                {/* <img></img> */}
+                <div className="ProfileData">
+                    <div>Email: {context?.authInfo?.email}</div>
+                    <div>Username: {context?.authInfo?.username}</div>
+                    <Button
+                        onClick={() => {
+                            signoutUser();
+                            navigate("/");
+                        }}
+                        variant="contained"
+                        sx={{
+                            backgroundColor: "#d6cbb8",
+                            color: "#121417",
+                        }}
+                    >
+                        Sign out
+                    </Button>
+                </div>
+            </div>
         </>
     );
 }

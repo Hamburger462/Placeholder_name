@@ -34,15 +34,6 @@ export default function MediaContentBlock({ id, clueId }: MediaContentProps) {
     const acceptValue = acceptMap[mediaForMedia.type] ?? "";
 
     useEffect(() => {
-        // async function setUrl(){
-        //     if (!context?.activeClue) return;
-        //     if (!userContext?.activeCase) return;
-
-        //     const docRef = await getDoc(doc(db, "Cases", userContext?.activeCase, "Clues", context?.activeClue, "Media", mediaForMedia.id));
-        //     setPreviewUrl((docRef.data()!.url) as string);
-        // }
-
-        // setUrl();
         if(mediaForMedia.type == "image" || mediaForMedia.type == "video" || mediaForMedia.type == "audio")
         setPreviewUrl(mediaForMedia.url)
     }, [clueId])
