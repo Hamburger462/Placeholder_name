@@ -43,7 +43,6 @@ export function DragProvider({ children, parentRef }: DragProvider) {
             // Check if the click target is a ConnectionDrop
             const target = e.target as HTMLElement;
             if (!target.closest(".ConnectionDrop")) {
-                console.log("Cancelled connection");
                 cancelConnection();
             }
         };

@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 
 import Layout from "./components/Layout";
-import Main from "./pages/Main";
+import MainPage from "./pages/MainPage";
 import Archive from "./pages/Archive";
 import Authorize, { Login, Register } from "./pages/Authorize";
 import Profile from "./pages/Profile";
@@ -46,7 +46,7 @@ function App() {
     return (
         <Routes>
             <Route element={<Layout />}>
-                <Route path="/" element={<Main />} />
+                <Route path="/" element={<MainPage />} />
                 <Route path="/archive" element={<Archive />} />
                 <Route element={<Authorize />}>
                     <Route path="/auth/login" element={<Login />}></Route>

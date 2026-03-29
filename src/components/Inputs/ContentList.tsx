@@ -79,12 +79,12 @@ export default function ContentList({ clue }: ContentListProps) {
                 batch.update(mediaRef, { order: index });
             });
 
-            setDraggedIndex(null);
-            setPlaceholderIndex(null);
-            context?.setActiveContent(null);
-
             await batch.commit();
         }
+
+        setDraggedIndex(null);
+        setPlaceholderIndex(null);
+        context?.setActiveContent(null);
     };
 
     const movePlaceholder = (hoverIndex: number, clientY: number) => {
