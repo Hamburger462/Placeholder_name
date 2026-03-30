@@ -19,7 +19,7 @@ type MediaContentProps = {
 export default function MediaContentBlock({ id, clueId }: MediaContentProps) {
     const userContext = useContext(authContext);
 
-    const { mediaForMedia } = useMediaForMedia(id);
+    const { mediaForMedia, renewMedia } = useMediaForMedia(id);
 
     const [file, setFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -35,7 +35,7 @@ export default function MediaContentBlock({ id, clueId }: MediaContentProps) {
 
     useEffect(() => {
         if(mediaForMedia.type == "image" || mediaForMedia.type == "video" || mediaForMedia.type == "audio")
-        setPreviewUrl(mediaForMedia.url)
+        setPreviewUrl(mediaForMedia.url);
     }, [clueId])
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,6 +65,8 @@ export default function MediaContentBlock({ id, clueId }: MediaContentProps) {
             console.log("Uploaded to Supabase:", publicUrl);
 
             if (!userContext?.activeCase) return;
+
+            renewMedia({url: publicUrl});
 
             await updateDoc(
                 doc(
